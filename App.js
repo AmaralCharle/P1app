@@ -1,0 +1,453 @@
+import React, { useMemo, useState } from 'react';
+import { StatusBar } from 'expo-status-bar';
+import {
+  Pressable,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
+
+const initialStudents = [
+  {
+    id: 1,
+    name: 'Ana Clara',
+    curso: 'Engenharia de Software',
+    notas: {
+      Matemática: 9.2,
+      Física: 8.6,
+      Programação: 9.8,
+      História: 7.5,
+    },
+  },
+  {
+    id: 2,
+    name: 'Bruno Silva',
+    curso: 'Análise de Sistemas',
+    notas: {
+      Matemática: 7.1,
+      Física: 6.4,
+      Programação: 8.8,
+      História: 7.9,
+    },
+  },
+  {
+    id: 3,
+    name: 'Carla Souza',
+    curso: 'Ciência da Computação',
+    notas: {
+      Matemática: 5.8,
+      Física: 6.2,
+      Programação: 7.4,
+      História: 6.9,
+    },
+  },
+];
+
+const getAverage = (notas) => {
+  const values = Object.values(notas || {});
+  if (!values.length) return 0;
+  const total = values.reduce((sum, value) => sum + Number(value || 0), 0);
+  return total / values.length;
+};
+
+const getStatus = (average) => {
+  if (average >= 7) return 'Aprovado';
+  if (average >= 5) return 'Em revisão';
+  return 'Atenção';
+};
+
+export default function App() {
+  const [students, setStudents] = useState(initialStudents);
+  const [newStudentName, setNewStudentName] = useState('');
+  const [selectedStudentId, setSelectedStudentId] = useState(initialStudents[0].id);
+  const [subject, setSubject] = useState('Matemática');
+  const [grade, setGrade] = useState('8.5');
+
+  const summary = useMemo(() => {
+    const total = students.length;
+    const medias = students.map((student) => getAverage(student.notas));
+    const mediaGeral = medias.length
+      ? medias.reduce((sum, value) => sum + value, 0) / medias.length
+      : 0;
+    const aprovados = students.filter((student) => getAverage(student.notas) >= 7).length;
+    const atencao = students.filter((student) => getAverage(student.notas) < 5).length;
+
+    return { total, mediaGeral, aprovados, atencao };
+  }, [students]);
+
+  const selectedStudent = students.find((student) => student.id === selectedStudentId) || students[0];
+
+  const addStudent = () => {
+    if (!newStudentName.trim()) return;
+
+    const student = {
+      id: Date.now(),
+      name: newStudentName.trim(),
+      curso: 'Novo curso',
+      notas: {
+        Matemática: 0,
+        Física: 0,
+        Programação: 0,
+        História: 0,
+      },
+    };
+
+    setStudents((current) => [student, ...current]);
+    setSelectedStudentId(student.id);
+    setNewStudentName('');
+  };
+
+  const addGrade = () => {
+    const gradeValue = Number(grade);
+    if (!subject.trim() || Number.isNaN(gradeValue)) return;
+
+    setStudents((current) =>
+      current.map((student) =>
+        student.id === selectedStudentId
+          ? {
+              ...student,
+              notas: {
+                ...student.notas,
+                [subject.trim()]: Number(gradeValue.toFixed(1)),
+              },
+            }
+          : student
+      )
+    );
+
+    setGrade('');
+    setSubject('Matemática');
+  };
+
+  return (
+    <SafeAreaView style={styles.screen}>
+      <StatusBar style="light" />
+      <ScrollView contentContainerStyle={styles.container}>
+        <View style={styles.header}>
+          <Text style={styles.eyebrow}>Sistema acadêmico</Text>
+          <Text style={styles.title}>Academy Notes</Text>
+          <Text style={styles.subtitle}>Painel de desempenho e notas</Text>
+        </View>
+
+        <View style={styles.summaryGrid}>
+          <View style={styles.summaryCard}>
+            <Text style={styles.summaryLabel}>Total</Text>
+            <Text style={styles.summaryValue}>{summary.total}</Text>
+          </View>
+          <View style={styles.summaryCard}>
+            <Text style={styles.summaryLabel}>Média</Text>
+            <Text style={styles.summaryValue}>{summary.mediaGeral.toFixed(1)}</Text>
+          </View>
+          <View style={styles.summaryCard}>
+            <Text style={styles.summaryLabel}>Aprovados</Text>
+            <Text style={styles.summaryValue}>{summary.aprovados}</Text>
+          </View>
+          <View style={styles.summaryCard}>
+            <Text style={styles.summaryLabel}>Atenção</Text>
+            <Text style={styles.summaryValue}>{summary.atencao}</Text>
+          </View>
+        </View>
+
+        <View style={styles.card}>
+          <Text style={styles.sectionTitle}>Adicionar aluno</Text>
+          <TextInput
+            value={newStudentName}
+            onChangeText={setNewStudentName}
+            placeholder="Nome do aluno"
+            placeholderTextColor="#8fa4c7"
+            style={styles.input}
+          />
+          <Pressable style={styles.primaryButton} onPress={addStudent}>
+            <Text style={styles.primaryButtonText}>Cadastrar aluno</Text>
+          </Pressable>
+        </View>
+
+        <View style={styles.card}>
+          <Text style={styles.sectionTitle}>Registrar nota</Text>
+
+          <Text style={styles.label}>Aluno selecionado</Text>
+          <View style={styles.pillContainer}>
+            {students.map((student) => (
+              <Pressable
+                key={student.id}
+                style={[
+                  styles.pill,
+                  student.id === selectedStudentId && styles.pillSelected,
+                ]}
+                onPress={() => setSelectedStudentId(student.id)}
+              >
+                <Text
+                  style={[
+                    styles.pillText,
+                    student.id === selectedStudentId && styles.pillTextSelected,
+                  ]}
+                >
+                  {student.name}
+                </Text>
+              </Pressable>
+            ))}
+          </View>
+
+          <TextInput
+            value={subject}
+            onChangeText={setSubject}
+            placeholder="Disciplina"
+            placeholderTextColor="#8fa4c7"
+            style={styles.input}
+          />
+          <TextInput
+            value={grade}
+            onChangeText={setGrade}
+            placeholder="Nota"
+            keyboardType="numeric"
+            placeholderTextColor="#8fa4c7"
+            style={styles.input}
+          />
+
+          <Pressable style={styles.primaryButton} onPress={addGrade}>
+            <Text style={styles.primaryButtonText}>Salvar nota</Text>
+          </Pressable>
+        </View>
+
+        <View style={styles.card}>
+          <Text style={styles.sectionTitle}>Lista de alunos</Text>
+
+          {students.map((student) => {
+            const average = getAverage(student.notas);
+            const status = getStatus(average);
+
+            return (
+              <Pressable
+                key={student.id}
+                style={[
+                  styles.studentCard,
+                  student.id === selectedStudentId && styles.studentCardSelected,
+                ]}
+                onPress={() => setSelectedStudentId(student.id)}
+              >
+                <View style={styles.studentHeaderRow}>
+                  <Text style={styles.studentName}>{student.name}</Text>
+                  <Text
+                    style={[
+                      styles.statusBadge,
+                      status === 'Aprovado'
+                        ? styles.statusPassed
+                        : status === 'Em revisão'
+                          ? styles.statusReview
+                          : styles.statusWarning,
+                    ]}
+                  >
+                    {status}
+                  </Text>
+                </View>
+
+                <Text style={styles.studentCourse}>{student.curso}</Text>
+
+                <View style={styles.studentMetricsRow}>
+                  <Text style={styles.metricText}>Média: {average.toFixed(1)}</Text>
+                  <Text style={styles.metricText}>Notas: {Object.keys(student.notas).length}</Text>
+                </View>
+
+                <Text style={styles.studentNotes}>
+                  {Object.entries(student.notas)
+                    .map(([subjectName, value]) => `${subjectName}: ${value}`)
+                    .join(' • ')}
+                </Text>
+              </Pressable>
+            );
+          })}
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  screen: {
+    flex: 1,
+    backgroundColor: '#0b1020',
+  },
+  container: {
+    padding: 20,
+    paddingBottom: 40,
+  },
+  header: {
+    marginBottom: 18,
+  },
+  eyebrow: {
+    color: '#8ab4ff',
+    fontWeight: '700',
+    letterSpacing: 1.2,
+    textTransform: 'uppercase',
+    marginBottom: 8,
+    fontSize: 12,
+  },
+  title: {
+    color: '#f5f7ff',
+    fontSize: 32,
+    fontWeight: '800',
+    marginBottom: 4,
+  },
+  subtitle: {
+    color: '#b7c5e6',
+    fontSize: 15,
+  },
+  summaryGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    marginBottom: 18,
+    gap: 10,
+  },
+  summaryCard: {
+    width: '48%',
+    backgroundColor: '#111a2f',
+    borderWidth: 1,
+    borderColor: '#203257',
+    borderRadius: 16,
+    padding: 16,
+  },
+  summaryLabel: {
+    color: '#9bb3d9',
+    fontSize: 12,
+    marginBottom: 8,
+  },
+  summaryValue: {
+    color: '#f5f7ff',
+    fontWeight: '800',
+    fontSize: 28,
+  },
+  card: {
+    backgroundColor: '#111a2f',
+    borderRadius: 20,
+    padding: 18,
+    marginBottom: 18,
+    borderWidth: 1,
+    borderColor: '#203257',
+  },
+  sectionTitle: {
+    color: '#f5f7ff',
+    fontSize: 20,
+    fontWeight: '700',
+    marginBottom: 14,
+  },
+  input: {
+    backgroundColor: '#0d1527',
+    borderWidth: 1,
+    borderColor: '#2a3d61',
+    color: '#f5f7ff',
+    borderRadius: 12,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    marginBottom: 12,
+    fontSize: 15,
+  },
+  primaryButton: {
+    backgroundColor: '#5b8cff',
+    borderRadius: 12,
+    paddingVertical: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  primaryButtonText: {
+    color: '#ffffff',
+    fontWeight: '700',
+    fontSize: 15,
+  },
+  label: {
+    color: '#b7c5e6',
+    fontSize: 13,
+    marginBottom: 8,
+  },
+  pillContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginBottom: 12,
+    gap: 8,
+  },
+  pill: {
+    backgroundColor: '#162544',
+    borderRadius: 999,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderWidth: 1,
+    borderColor: '#2a3d61',
+  },
+  pillSelected: {
+    backgroundColor: '#254db3',
+    borderColor: '#7aa2ff',
+  },
+  pillText: {
+    color: '#dfe8ff',
+    fontSize: 12,
+    fontWeight: '600',
+  },
+  pillTextSelected: {
+    color: '#ffffff',
+  },
+  studentCard: {
+    backgroundColor: '#0d1527',
+    borderRadius: 16,
+    padding: 14,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: '#263d68',
+  },
+  studentCardSelected: {
+    borderColor: '#88a9ff',
+    backgroundColor: '#101d35',
+  },
+  studentHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 6,
+  },
+  studentName: {
+    color: '#f5f7ff',
+    fontWeight: '700',
+    fontSize: 18,
+  },
+  studentCourse: {
+    color: '#9bb3d9',
+    fontSize: 13,
+    marginBottom: 8,
+  },
+  studentMetricsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 6,
+  },
+  metricText: {
+    color: '#dfe8ff',
+    fontSize: 12,
+  },
+  studentNotes: {
+    color: '#b7c5e6',
+    fontSize: 12,
+    lineHeight: 18,
+  },
+  statusBadge: {
+    fontSize: 11,
+    fontWeight: '700',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 999,
+    overflow: 'hidden',
+  },
+  statusPassed: {
+    backgroundColor: '#123d2e',
+    color: '#8ce6bf',
+  },
+  statusReview: {
+    backgroundColor: '#3b3419',
+    color: '#ffda7a',
+  },
+  statusWarning: {
+    backgroundColor: '#3b1d1d',
+    color: '#ff9a9a',
+  },
+});
