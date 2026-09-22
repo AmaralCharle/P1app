@@ -59,12 +59,32 @@ const getStatus = (average) => {
   return 'Atenção';
 };
 
+const screenOrder = [
+  'Dashboard',
+  'Alunos',
+  'Adicionar',
+  'Notas',
+  'Relatórios',
+  'Config',
+];
+
+function ScreenShell({ title, subtitle, children }) {
+  return (
+    <View style={styles.card}> 
+      <Text style={styles.sectionTitle}>{title}</Text>
+      {subtitle ? <Text style={styles.subtitleText}>{subtitle}</Text> : null}
+      {children}
+    </View>
+  );
+}
+
 export default function App() {
   const [students, setStudents] = useState(initialStudents);
   const [newStudentName, setNewStudentName] = useState('');
   const [selectedStudentId, setSelectedStudentId] = useState(initialStudents[0].id);
   const [subject, setSubject] = useState('Matemática');
   const [grade, setGrade] = useState('8.5');
+  const [activeScreen, setActiveScreen] = useState('Dashboard');
 
   const summary = useMemo(() => {
     const total = students.length;
@@ -77,8 +97,6 @@ export default function App() {
 
     return { total, mediaGeral, aprovados, atencao };
   }, [students]);
-
-  const selectedStudent = students.find((student) => student.id === selectedStudentId) || students[0];
 
   const addStudent = () => {
     if (!newStudentName.trim()) return;
@@ -98,6 +116,7 @@ export default function App() {
     setStudents((current) => [student, ...current]);
     setSelectedStudentId(student.id);
     setNewStudentName('');
+    setActiveScreen('Alunos');
   };
 
   const addGrade = () => {
@@ -120,6 +139,176 @@ export default function App() {
 
     setGrade('');
     setSubject('Matemática');
+    setActiveScreen('Notas');
+  };
+
+  const renderScreen = () => {
+    switch (activeScreen) {
+      case 'Dashboard':
+        return (
+          <ScreenShell title="Dashboard" subtitle="Resumo geral do desempenho acadêmico">
+            <View style={styles.summaryGrid}>
+              <View style={styles.summaryCard}>
+                <Text style={styles.summaryLabel}>Total</Text>
+                <Text style={styles.summaryValue}>{summary.total}</Text>
+              </View>
+              <View style={styles.summaryCard}>
+                <Text style={styles.summaryLabel}>Média</Text>
+                <Text style={styles.summaryValue}>{summary.mediaGeral.toFixed(1)}</Text>
+              </View>
+              <View style={styles.summaryCard}>
+                <Text style={styles.summaryLabel}>Aprovados</Text>
+                <Text style={styles.summaryValue}>{summary.aprovados}</Text>
+              </View>
+              <View style={styles.summaryCard}>
+                <Text style={styles.summaryLabel}>Atenção</Text>
+                <Text style={styles.summaryValue}>{summary.atencao}</Text>
+              </View>
+            </View>
+          </ScreenShell>
+        );
+      case 'Alunos':
+        return (
+          <ScreenShell title="Alunos" subtitle="Lista geral dos estudantes cadastrados">
+            {students.map((student) => {
+              const average = getAverage(student.notas);
+              const status = getStatus(average);
+              return (
+                <Pressable
+                  key={student.id}
+                  style={[
+                    styles.studentCard,
+                    student.id === selectedStudentId && styles.studentCardSelected,
+                  ]}
+                  onPress={() => setSelectedStudentId(student.id)}
+                >
+                  <View style={styles.studentHeaderRow}>
+                    <Text style={styles.studentName}>{student.name}</Text>
+                    <Text
+                      style={[
+                        styles.statusBadge,
+                        status === 'Aprovado'
+                          ? styles.statusPassed
+                          : status === 'Em revisão'
+                            ? styles.statusReview
+                            : styles.statusWarning,
+                      ]}
+                    >
+                      {status}
+                    </Text>
+                  </View>
+                  <Text style={styles.studentCourse}>{student.curso}</Text>
+                  <View style={styles.studentMetricsRow}>
+                    <Text style={styles.metricText}>Média: {average.toFixed(1)}</Text>
+                    <Text style={styles.metricText}>Notas: {Object.keys(student.notas).length}</Text>
+                  </View>
+                  <Text style={styles.studentNotes}>
+                    {Object.entries(student.notas)
+                      .map(([subjectName, value]) => `${subjectName}: ${value}`)
+                      .join(' • ')}
+                  </Text>
+                </Pressable>
+              );
+            })}
+          </ScreenShell>
+        );
+      case 'Adicionar':
+        return (
+          <ScreenShell title="Adicionar aluno" subtitle="Cadastre um novo estudante no sistema">
+            <TextInput
+              value={newStudentName}
+              onChangeText={setNewStudentName}
+              placeholder="Nome do aluno"
+              placeholderTextColor="#8fa4c7"
+              style={styles.input}
+            />
+            <Pressable style={styles.primaryButton} onPress={addStudent}>
+              <Text style={styles.primaryButtonText}>Cadastrar aluno</Text>
+            </Pressable>
+          </ScreenShell>
+        );
+      case 'Notas':
+        return (
+          <ScreenShell title="Notas" subtitle="Registre e atualize as avaliações do aluno selecionado">
+            <Text style={styles.label}>Aluno selecionado</Text>
+            <View style={styles.pillContainer}>
+              {students.map((student) => (
+                <Pressable
+                  key={student.id}
+                  style={[
+                    styles.pill,
+                    student.id === selectedStudentId && styles.pillSelected,
+                  ]}
+                  onPress={() => setSelectedStudentId(student.id)}
+                >
+                  <Text
+                    style={[
+                      styles.pillText,
+                      student.id === selectedStudentId && styles.pillTextSelected,
+                    ]}
+                  >
+                    {student.name}
+                  </Text>
+                </Pressable>
+              ))}
+            </View>
+            <TextInput
+              value={subject}
+              onChangeText={setSubject}
+              placeholder="Disciplina"
+              placeholderTextColor="#8fa4c7"
+              style={styles.input}
+            />
+            <TextInput
+              value={grade}
+              onChangeText={setGrade}
+              placeholder="Nota"
+              keyboardType="numeric"
+              placeholderTextColor="#8fa4c7"
+              style={styles.input}
+            />
+            <Pressable style={styles.primaryButton} onPress={addGrade}>
+              <Text style={styles.primaryButtonText}>Salvar nota</Text>
+            </Pressable>
+          </ScreenShell>
+        );
+      case 'Relatórios':
+        return (
+          <ScreenShell title="Relatórios" subtitle="Resumo de desempenho por categoria">
+            <View style={styles.reportList}>
+              <View style={styles.reportItem}>
+                <Text style={styles.reportTitle}>Média geral</Text>
+                <Text style={styles.reportValue}>{summary.mediaGeral.toFixed(1)}</Text>
+              </View>
+              <View style={styles.reportItem}>
+                <Text style={styles.reportTitle}>Aprovados</Text>
+                <Text style={styles.reportValue}>{summary.aprovados}</Text>
+              </View>
+              <View style={styles.reportItem}>
+                <Text style={styles.reportTitle}>Em revisão</Text>
+                <Text style={styles.reportValue}>{students.filter((student) => getAverage(student.notas) >= 5 && getAverage(student.notas) < 7).length}</Text>
+              </View>
+              <View style={styles.reportItem}>
+                <Text style={styles.reportTitle}>Atenção</Text>
+                <Text style={styles.reportValue}>{summary.atencao}</Text>
+              </View>
+            </View>
+          </ScreenShell>
+        );
+      case 'Config':
+        return (
+          <ScreenShell title="Configurações" subtitle="Informações do app acadêmico">
+            <View style={styles.configBox}>
+              <Text style={styles.configText}>App: Academy Notes</Text>
+              <Text style={styles.configText}>Tipo: React Native + Expo</Text>
+              <Text style={styles.configText}>Modo: dados simulados</Text>
+              <Text style={styles.configText}>Objetivo: gestão de notas universitárias</Text>
+            </View>
+          </ScreenShell>
+        );
+      default:
+        return null;
+    }
   };
 
   return (
@@ -132,134 +321,19 @@ export default function App() {
           <Text style={styles.subtitle}>Painel de desempenho e notas</Text>
         </View>
 
-        <View style={styles.summaryGrid}>
-          <View style={styles.summaryCard}>
-            <Text style={styles.summaryLabel}>Total</Text>
-            <Text style={styles.summaryValue}>{summary.total}</Text>
-          </View>
-          <View style={styles.summaryCard}>
-            <Text style={styles.summaryLabel}>Média</Text>
-            <Text style={styles.summaryValue}>{summary.mediaGeral.toFixed(1)}</Text>
-          </View>
-          <View style={styles.summaryCard}>
-            <Text style={styles.summaryLabel}>Aprovados</Text>
-            <Text style={styles.summaryValue}>{summary.aprovados}</Text>
-          </View>
-          <View style={styles.summaryCard}>
-            <Text style={styles.summaryLabel}>Atenção</Text>
-            <Text style={styles.summaryValue}>{summary.atencao}</Text>
-          </View>
+        <View style={styles.tabBar}>
+          {screenOrder.map((screen) => (
+            <Pressable
+              key={screen}
+              style={[styles.tabButton, activeScreen === screen && styles.tabButtonActive]}
+              onPress={() => setActiveScreen(screen)}
+            >
+              <Text style={[styles.tabText, activeScreen === screen && styles.tabTextActive]}>{screen}</Text>
+            </Pressable>
+          ))}
         </View>
 
-        <View style={styles.card}>
-          <Text style={styles.sectionTitle}>Adicionar aluno</Text>
-          <TextInput
-            value={newStudentName}
-            onChangeText={setNewStudentName}
-            placeholder="Nome do aluno"
-            placeholderTextColor="#8fa4c7"
-            style={styles.input}
-          />
-          <Pressable style={styles.primaryButton} onPress={addStudent}>
-            <Text style={styles.primaryButtonText}>Cadastrar aluno</Text>
-          </Pressable>
-        </View>
-
-        <View style={styles.card}>
-          <Text style={styles.sectionTitle}>Registrar nota</Text>
-
-          <Text style={styles.label}>Aluno selecionado</Text>
-          <View style={styles.pillContainer}>
-            {students.map((student) => (
-              <Pressable
-                key={student.id}
-                style={[
-                  styles.pill,
-                  student.id === selectedStudentId && styles.pillSelected,
-                ]}
-                onPress={() => setSelectedStudentId(student.id)}
-              >
-                <Text
-                  style={[
-                    styles.pillText,
-                    student.id === selectedStudentId && styles.pillTextSelected,
-                  ]}
-                >
-                  {student.name}
-                </Text>
-              </Pressable>
-            ))}
-          </View>
-
-          <TextInput
-            value={subject}
-            onChangeText={setSubject}
-            placeholder="Disciplina"
-            placeholderTextColor="#8fa4c7"
-            style={styles.input}
-          />
-          <TextInput
-            value={grade}
-            onChangeText={setGrade}
-            placeholder="Nota"
-            keyboardType="numeric"
-            placeholderTextColor="#8fa4c7"
-            style={styles.input}
-          />
-
-          <Pressable style={styles.primaryButton} onPress={addGrade}>
-            <Text style={styles.primaryButtonText}>Salvar nota</Text>
-          </Pressable>
-        </View>
-
-        <View style={styles.card}>
-          <Text style={styles.sectionTitle}>Lista de alunos</Text>
-
-          {students.map((student) => {
-            const average = getAverage(student.notas);
-            const status = getStatus(average);
-
-            return (
-              <Pressable
-                key={student.id}
-                style={[
-                  styles.studentCard,
-                  student.id === selectedStudentId && styles.studentCardSelected,
-                ]}
-                onPress={() => setSelectedStudentId(student.id)}
-              >
-                <View style={styles.studentHeaderRow}>
-                  <Text style={styles.studentName}>{student.name}</Text>
-                  <Text
-                    style={[
-                      styles.statusBadge,
-                      status === 'Aprovado'
-                        ? styles.statusPassed
-                        : status === 'Em revisão'
-                          ? styles.statusReview
-                          : styles.statusWarning,
-                    ]}
-                  >
-                    {status}
-                  </Text>
-                </View>
-
-                <Text style={styles.studentCourse}>{student.curso}</Text>
-
-                <View style={styles.studentMetricsRow}>
-                  <Text style={styles.metricText}>Média: {average.toFixed(1)}</Text>
-                  <Text style={styles.metricText}>Notas: {Object.keys(student.notas).length}</Text>
-                </View>
-
-                <Text style={styles.studentNotes}>
-                  {Object.entries(student.notas)
-                    .map(([subjectName, value]) => `${subjectName}: ${value}`)
-                    .join(' • ')}
-                </Text>
-              </Pressable>
-            );
-          })}
-        </View>
+        {renderScreen()}
       </ScrollView>
     </SafeAreaView>
   );
@@ -271,11 +345,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#0b1020',
   },
   container: {
-    padding: 20,
+    padding: 18,
     paddingBottom: 40,
   },
   header: {
-    marginBottom: 18,
+    marginBottom: 16,
   },
   eyebrow: {
     color: '#8ab4ff',
@@ -295,16 +369,61 @@ const styles = StyleSheet.create({
     color: '#b7c5e6',
     fontSize: 15,
   },
+  tabBar: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+    marginBottom: 18,
+  },
+  tabButton: {
+    backgroundColor: '#111a2f',
+    borderRadius: 12,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    borderWidth: 1,
+    borderColor: '#203257',
+    marginBottom: 8,
+  },
+  tabButtonActive: {
+    backgroundColor: '#254db3',
+    borderColor: '#7aa2ff',
+  },
+  tabText: {
+    color: '#dfe8ff',
+    fontSize: 12,
+    fontWeight: '600',
+  },
+  tabTextActive: {
+    color: '#ffffff',
+  },
+  card: {
+    backgroundColor: '#111a2f',
+    borderRadius: 20,
+    padding: 18,
+    marginBottom: 18,
+    borderWidth: 1,
+    borderColor: '#203257',
+  },
+  sectionTitle: {
+    color: '#f5f7ff',
+    fontSize: 20,
+    fontWeight: '700',
+    marginBottom: 6,
+  },
+  subtitleText: {
+    color: '#b7c5e6',
+    fontSize: 13,
+    marginBottom: 14,
+  },
   summaryGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    marginBottom: 18,
     gap: 10,
   },
   summaryCard: {
     width: '48%',
-    backgroundColor: '#111a2f',
+    backgroundColor: '#0d1527',
     borderWidth: 1,
     borderColor: '#203257',
     borderRadius: 16,
@@ -319,20 +438,6 @@ const styles = StyleSheet.create({
     color: '#f5f7ff',
     fontWeight: '800',
     fontSize: 28,
-  },
-  card: {
-    backgroundColor: '#111a2f',
-    borderRadius: 20,
-    padding: 18,
-    marginBottom: 18,
-    borderWidth: 1,
-    borderColor: '#203257',
-  },
-  sectionTitle: {
-    color: '#f5f7ff',
-    fontSize: 20,
-    fontWeight: '700',
-    marginBottom: 14,
   },
   input: {
     backgroundColor: '#0d1527',
@@ -449,5 +554,37 @@ const styles = StyleSheet.create({
   statusWarning: {
     backgroundColor: '#3b1d1d',
     color: '#ff9a9a',
+  },
+  reportList: {
+    gap: 10,
+  },
+  reportItem: {
+    backgroundColor: '#0d1527',
+    borderRadius: 12,
+    padding: 12,
+    borderWidth: 1,
+    borderColor: '#203257',
+  },
+  reportTitle: {
+    color: '#9bb3d9',
+    fontSize: 12,
+    marginBottom: 4,
+  },
+  reportValue: {
+    color: '#f5f7ff',
+    fontSize: 22,
+    fontWeight: '800',
+  },
+  configBox: {
+    backgroundColor: '#0d1527',
+    borderRadius: 12,
+    padding: 14,
+    borderWidth: 1,
+    borderColor: '#203257',
+  },
+  configText: {
+    color: '#dfe8ff',
+    fontSize: 14,
+    marginBottom: 8,
   },
 });
