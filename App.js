@@ -9,6 +9,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
+import { colors, radius, spacing } from './theme';
 
 const initialStudents = [
   {
@@ -219,7 +220,7 @@ export default function App() {
               value={newStudentName}
               onChangeText={setNewStudentName}
               placeholder="Nome do aluno"
-              placeholderTextColor="#8fa4c7"
+              placeholderTextColor={colors.placeholder}
               style={styles.input}
             />
             <Pressable style={styles.primaryButton} onPress={addStudent}>
@@ -256,7 +257,7 @@ export default function App() {
               value={subject}
               onChangeText={setSubject}
               placeholder="Disciplina"
-              placeholderTextColor="#8fa4c7"
+              placeholderTextColor={colors.placeholder}
               style={styles.input}
             />
             <TextInput
@@ -264,7 +265,7 @@ export default function App() {
               onChangeText={setGrade}
               placeholder="Nota"
               keyboardType="numeric"
-              placeholderTextColor="#8fa4c7"
+              placeholderTextColor={colors.placeholder}
               style={styles.input}
             />
             <Pressable style={styles.primaryButton} onPress={addGrade}>
@@ -342,249 +343,249 @@ export default function App() {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: '#0b1020',
+    backgroundColor: colors.background,
   },
   container: {
-    padding: 18,
-    paddingBottom: 40,
+    padding: spacing.card,
+    paddingBottom: spacing.bottom,
   },
   header: {
-    marginBottom: 16,
+    marginBottom: spacing.md,
   },
   eyebrow: {
-    color: '#8ab4ff',
+    color: colors.info,
     fontWeight: '700',
     letterSpacing: 1.2,
     textTransform: 'uppercase',
-    marginBottom: 8,
+    marginBottom: spacing.sm,
     fontSize: 12,
   },
   title: {
-    color: '#f5f7ff',
+    color: colors.text,
     fontSize: 32,
     fontWeight: '800',
-    marginBottom: 4,
+    marginBottom: spacing.xs,
   },
   subtitle: {
-    color: '#b7c5e6',
+    color: colors.textSoft,
     fontSize: 15,
   },
   tabBar: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 8,
-    marginBottom: 18,
+    gap: spacing.sm,
+    marginBottom: spacing.card,
   },
   tabButton: {
-    backgroundColor: '#111a2f',
-    borderRadius: 12,
+    backgroundColor: colors.backgroundCard,
+    borderRadius: radius.md,
     paddingHorizontal: 10,
-    paddingVertical: 8,
+    paddingVertical: spacing.sm,
     borderWidth: 1,
-    borderColor: '#203257',
-    marginBottom: 8,
+    borderColor: colors.border,
+    marginBottom: spacing.sm,
   },
   tabButtonActive: {
-    backgroundColor: '#254db3',
-    borderColor: '#7aa2ff',
+    backgroundColor: colors.primaryDark,
+    borderColor: colors.primaryBorder,
   },
   tabText: {
-    color: '#dfe8ff',
+    color: colors.textSecondary,
     fontSize: 12,
     fontWeight: '600',
   },
   tabTextActive: {
-    color: '#ffffff',
+    color: colors.textInverse,
   },
   card: {
-    backgroundColor: '#111a2f',
-    borderRadius: 20,
-    padding: 18,
-    marginBottom: 18,
+    backgroundColor: colors.backgroundCard,
+    borderRadius: radius.xl,
+    padding: spacing.card,
+    marginBottom: spacing.card,
     borderWidth: 1,
-    borderColor: '#203257',
+    borderColor: colors.border,
   },
   sectionTitle: {
-    color: '#f5f7ff',
+    color: colors.text,
     fontSize: 20,
     fontWeight: '700',
-    marginBottom: 6,
+    marginBottom: spacing.compact,
   },
   subtitleText: {
-    color: '#b7c5e6',
+    color: colors.textSoft,
     fontSize: 13,
-    marginBottom: 14,
+    marginBottom: spacing.input,
   },
   summaryGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    gap: 10,
+    gap: spacing.control,
   },
   summaryCard: {
     width: '48%',
-    backgroundColor: '#0d1527',
+    backgroundColor: colors.backgroundSoft,
     borderWidth: 1,
-    borderColor: '#203257',
-    borderRadius: 16,
-    padding: 16,
+    borderColor: colors.border,
+    borderRadius: radius.lg,
+    padding: spacing.md,
   },
   summaryLabel: {
-    color: '#9bb3d9',
+    color: colors.textMuted,
     fontSize: 12,
-    marginBottom: 8,
+    marginBottom: spacing.sm,
   },
   summaryValue: {
-    color: '#f5f7ff',
+    color: colors.text,
     fontWeight: '800',
     fontSize: 28,
   },
   input: {
-    backgroundColor: '#0d1527',
+    backgroundColor: colors.backgroundSoft,
     borderWidth: 1,
-    borderColor: '#2a3d61',
-    color: '#f5f7ff',
-    borderRadius: 12,
-    paddingHorizontal: 14,
-    paddingVertical: 12,
-    marginBottom: 12,
+    borderColor: colors.borderInput,
+    color: colors.text,
+    borderRadius: radius.md,
+    paddingHorizontal: spacing.input,
+    paddingVertical: spacing.mdCompact,
+    marginBottom: spacing.mdCompact,
     fontSize: 15,
   },
   primaryButton: {
-    backgroundColor: '#5b8cff',
-    borderRadius: 12,
-    paddingVertical: 12,
+    backgroundColor: colors.primary,
+    borderRadius: radius.md,
+    paddingVertical: spacing.mdCompact,
     alignItems: 'center',
     justifyContent: 'center',
   },
   primaryButtonText: {
-    color: '#ffffff',
+    color: colors.textInverse,
     fontWeight: '700',
     fontSize: 15,
   },
   label: {
-    color: '#b7c5e6',
+    color: colors.textSoft,
     fontSize: 13,
-    marginBottom: 8,
+    marginBottom: spacing.sm,
   },
   pillContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    marginBottom: 12,
-    gap: 8,
+    marginBottom: spacing.mdCompact,
+    gap: spacing.sm,
   },
   pill: {
-    backgroundColor: '#162544',
-    borderRadius: 999,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
+    backgroundColor: colors.backgroundPill,
+    borderRadius: radius.full,
+    paddingHorizontal: spacing.mdCompact,
+    paddingVertical: spacing.sm,
     borderWidth: 1,
-    borderColor: '#2a3d61',
+    borderColor: colors.borderInput,
   },
   pillSelected: {
-    backgroundColor: '#254db3',
-    borderColor: '#7aa2ff',
+    backgroundColor: colors.primaryDark,
+    borderColor: colors.primaryBorder,
   },
   pillText: {
-    color: '#dfe8ff',
+    color: colors.textSecondary,
     fontSize: 12,
     fontWeight: '600',
   },
   pillTextSelected: {
-    color: '#ffffff',
+    color: colors.textInverse,
   },
   studentCard: {
-    backgroundColor: '#0d1527',
-    borderRadius: 16,
-    padding: 14,
-    marginBottom: 12,
+    backgroundColor: colors.backgroundSoft,
+    borderRadius: radius.lg,
+    padding: spacing.input,
+    marginBottom: spacing.mdCompact,
     borderWidth: 1,
-    borderColor: '#263d68',
+    borderColor: colors.borderStudent,
   },
   studentCardSelected: {
-    borderColor: '#88a9ff',
-    backgroundColor: '#101d35',
+    borderColor: colors.borderSelected,
+    backgroundColor: colors.backgroundSelected,
   },
   studentHeaderRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 6,
+    marginBottom: spacing.compact,
   },
   studentName: {
-    color: '#f5f7ff',
+    color: colors.text,
     fontWeight: '700',
     fontSize: 18,
   },
   studentCourse: {
-    color: '#9bb3d9',
+    color: colors.textMuted,
     fontSize: 13,
-    marginBottom: 8,
+    marginBottom: spacing.sm,
   },
   studentMetricsRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 6,
+    marginBottom: spacing.compact,
   },
   metricText: {
-    color: '#dfe8ff',
+    color: colors.textSecondary,
     fontSize: 12,
   },
   studentNotes: {
-    color: '#b7c5e6',
+    color: colors.textSoft,
     fontSize: 12,
     lineHeight: 18,
   },
   statusBadge: {
     fontSize: 11,
     fontWeight: '700',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 999,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
+    borderRadius: radius.full,
     overflow: 'hidden',
   },
   statusPassed: {
-    backgroundColor: '#123d2e',
-    color: '#8ce6bf',
+    backgroundColor: colors.successBackground,
+    color: colors.success,
   },
   statusReview: {
-    backgroundColor: '#3b3419',
-    color: '#ffda7a',
+    backgroundColor: colors.warningBackground,
+    color: colors.warning,
   },
   statusWarning: {
-    backgroundColor: '#3b1d1d',
-    color: '#ff9a9a',
+    backgroundColor: colors.dangerBackground,
+    color: colors.danger,
   },
   reportList: {
-    gap: 10,
+    gap: spacing.control,
   },
   reportItem: {
-    backgroundColor: '#0d1527',
-    borderRadius: 12,
-    padding: 12,
+    backgroundColor: colors.backgroundSoft,
+    borderRadius: radius.md,
+    padding: spacing.mdCompact,
     borderWidth: 1,
-    borderColor: '#203257',
+    borderColor: colors.border,
   },
   reportTitle: {
-    color: '#9bb3d9',
+    color: colors.textMuted,
     fontSize: 12,
-    marginBottom: 4,
+    marginBottom: spacing.xs,
   },
   reportValue: {
-    color: '#f5f7ff',
+    color: colors.text,
     fontSize: 22,
     fontWeight: '800',
   },
   configBox: {
-    backgroundColor: '#0d1527',
-    borderRadius: 12,
-    padding: 14,
+    backgroundColor: colors.backgroundSoft,
+    borderRadius: radius.md,
+    padding: spacing.input,
     borderWidth: 1,
-    borderColor: '#203257',
+    borderColor: colors.border,
   },
   configText: {
-    color: '#dfe8ff',
+    color: colors.textSecondary,
     fontSize: 14,
-    marginBottom: 8,
+    marginBottom: spacing.sm,
   },
 });
