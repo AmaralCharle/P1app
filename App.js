@@ -1,7 +1,9 @@
 import React, { useMemo, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import {
+  KeyboardAvoidingView,
   Pressable,
+  Platform,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -218,61 +220,65 @@ export default function App() {
       case 'Adicionar':
         return (
           <ScreenShell title="Adicionar aluno" subtitle="Cadastre um novo estudante no sistema">
-            <TextInput
-              value={newStudentName}
-              onChangeText={setNewStudentName}
-              placeholder="Nome do aluno"
-              placeholderTextColor={colors.placeholder}
-              style={styles.input}
-            />
-            <Pressable style={styles.primaryButton} onPress={addStudent}>
-              <Text style={styles.primaryButtonText}>Cadastrar aluno</Text>
-            </Pressable>
+            <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+              <TextInput
+                value={newStudentName}
+                onChangeText={setNewStudentName}
+                placeholder="Nome do aluno"
+                placeholderTextColor={colors.placeholder}
+                style={styles.input}
+              />
+              <Pressable style={styles.primaryButton} onPress={addStudent}>
+                <Text style={styles.primaryButtonText}>Cadastrar aluno</Text>
+              </Pressable>
+            </KeyboardAvoidingView>
           </ScreenShell>
         );
       case 'Notas':
         return (
           <ScreenShell title="Notas" subtitle="Registre e atualize as avaliações do aluno selecionado">
-            <Text style={styles.label}>Aluno selecionado</Text>
-            <View style={styles.pillContainer}>
-              {students.map((student) => (
-                <Pressable
-                  key={student.id}
-                  style={[
-                    styles.pill,
-                    student.id === selectedStudentId && styles.pillSelected,
-                  ]}
-                  onPress={() => setSelectedStudentId(student.id)}
-                >
-                  <Text
+            <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+              <Text style={styles.label}>Aluno selecionado</Text>
+              <View style={styles.pillContainer}>
+                {students.map((student) => (
+                  <Pressable
+                    key={student.id}
                     style={[
-                      styles.pillText,
-                      student.id === selectedStudentId && styles.pillTextSelected,
+                      styles.pill,
+                      student.id === selectedStudentId && styles.pillSelected,
                     ]}
+                    onPress={() => setSelectedStudentId(student.id)}
                   >
-                    {student.name}
-                  </Text>
-                </Pressable>
-              ))}
-            </View>
-            <TextInput
-              value={subject}
-              onChangeText={setSubject}
-              placeholder="Disciplina"
-              placeholderTextColor={colors.placeholder}
-              style={styles.input}
-            />
-            <TextInput
-              value={grade}
-              onChangeText={setGrade}
-              placeholder="Nota"
-              keyboardType="numeric"
-              placeholderTextColor={colors.placeholder}
-              style={styles.input}
-            />
-            <Pressable style={styles.primaryButton} onPress={addGrade}>
-              <Text style={styles.primaryButtonText}>Salvar nota</Text>
-            </Pressable>
+                    <Text
+                      style={[
+                        styles.pillText,
+                        student.id === selectedStudentId && styles.pillTextSelected,
+                      ]}
+                    >
+                      {student.name}
+                    </Text>
+                  </Pressable>
+                ))}
+              </View>
+              <TextInput
+                value={subject}
+                onChangeText={setSubject}
+                placeholder="Disciplina"
+                placeholderTextColor={colors.placeholder}
+                style={styles.input}
+              />
+              <TextInput
+                value={grade}
+                onChangeText={setGrade}
+                placeholder="Nota"
+                keyboardType="numeric"
+                placeholderTextColor={colors.placeholder}
+                style={styles.input}
+              />
+              <Pressable style={styles.primaryButton} onPress={addGrade}>
+                <Text style={styles.primaryButtonText}>Salvar nota</Text>
+              </Pressable>
+            </KeyboardAvoidingView>
           </ScreenShell>
         );
       case 'Relatórios':
