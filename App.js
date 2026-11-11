@@ -398,6 +398,7 @@ const styles = StyleSheet.create({
     color: colors.textInverse,
   },
   card: {
+    flex: 1,
     backgroundColor: colors.backgroundCard,
     borderRadius: radius.xl,
     padding: spacing.card,
