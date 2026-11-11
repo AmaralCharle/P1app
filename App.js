@@ -566,6 +566,10 @@ const styles = StyleSheet.create({
     lineHeight: 18,
   },
   statusBadge: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    zIndex: 1,
     fontSize: 11,
     fontWeight: '700',
     paddingHorizontal: spacing.sm,
