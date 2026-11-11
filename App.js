@@ -171,46 +171,48 @@ export default function App() {
       case 'Alunos':
         return (
           <ScreenShell title="Alunos" subtitle="Lista geral dos estudantes cadastrados">
-            {students.map((student) => {
-              const average = getAverage(student.notas);
-              const status = getStatus(average);
-              return (
-                <Pressable
-                  key={student.id}
-                  style={[
-                    styles.studentCard,
-                    student.id === selectedStudentId && styles.studentCardSelected,
-                  ]}
-                  onPress={() => setSelectedStudentId(student.id)}
-                >
-                  <View style={styles.studentHeaderRow}>
-                    <Text style={styles.studentName}>{student.name}</Text>
-                    <Text
-                      style={[
-                        styles.statusBadge,
-                        status === 'Aprovado'
-                          ? styles.statusPassed
-                          : status === 'Em revisão'
-                            ? styles.statusReview
-                            : styles.statusWarning,
-                      ]}
-                    >
-                      {status}
+            <View style={styles.studentList}>
+              {students.map((student) => {
+                const average = getAverage(student.notas);
+                const status = getStatus(average);
+                return (
+                  <Pressable
+                    key={student.id}
+                    style={[
+                      styles.studentCard,
+                      student.id === selectedStudentId && styles.studentCardSelected,
+                    ]}
+                    onPress={() => setSelectedStudentId(student.id)}
+                  >
+                    <View style={styles.studentHeaderRow}>
+                      <Text style={styles.studentName}>{student.name}</Text>
+                      <Text
+                        style={[
+                          styles.statusBadge,
+                          status === 'Aprovado'
+                            ? styles.statusPassed
+                            : status === 'Em revisão'
+                              ? styles.statusReview
+                              : styles.statusWarning,
+                        ]}
+                      >
+                        {status}
+                      </Text>
+                    </View>
+                    <Text style={styles.studentCourse}>{student.curso}</Text>
+                    <View style={styles.studentMetricsRow}>
+                      <Text style={styles.metricText}>Média: {average.toFixed(1)}</Text>
+                      <Text style={styles.metricText}>Notas: {Object.keys(student.notas).length}</Text>
+                    </View>
+                    <Text style={styles.studentNotes}>
+                      {Object.entries(student.notas)
+                        .map(([subjectName, value]) => `${subjectName}: ${value}`)
+                        .join(' • ')}
                     </Text>
-                  </View>
-                  <Text style={styles.studentCourse}>{student.curso}</Text>
-                  <View style={styles.studentMetricsRow}>
-                    <Text style={styles.metricText}>Média: {average.toFixed(1)}</Text>
-                    <Text style={styles.metricText}>Notas: {Object.keys(student.notas).length}</Text>
-                  </View>
-                  <Text style={styles.studentNotes}>
-                    {Object.entries(student.notas)
-                      .map(([subjectName, value]) => `${subjectName}: ${value}`)
-                      .join(' • ')}
-                  </Text>
-                </Pressable>
-              );
-            })}
+                  </Pressable>
+                );
+              })}
+            </View>
           </ScreenShell>
         );
       case 'Adicionar':
@@ -500,9 +502,11 @@ const styles = StyleSheet.create({
     backgroundColor: colors.backgroundSoft,
     borderRadius: radius.lg,
     padding: spacing.input,
-    marginBottom: spacing.mdCompact,
     borderWidth: 1,
     borderColor: colors.borderStudent,
+  },
+  studentList: {
+    gap: spacing.md,
   },
   studentCardSelected: {
     borderColor: colors.borderSelected,
