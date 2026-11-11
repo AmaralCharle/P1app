@@ -377,6 +377,7 @@ const styles = StyleSheet.create({
   },
   container: {
     padding: spacing.card,
+    paddingTop: Platform.select({ ios: 20, android: 8 }),
     paddingBottom: spacing.bottom,
   },
   header: {
