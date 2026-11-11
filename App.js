@@ -74,8 +74,8 @@ const screenOrder = [
 function ScreenShell({ title, subtitle, children }) {
   return (
     <View style={styles.card}> 
-      <Text style={styles.sectionTitle}>{title}</Text>
-      {subtitle ? <Text style={styles.subtitleText}>{subtitle}</Text> : null}
+      <Text style={[styles.titulo, styles.sectionTitle]}>{title}</Text>
+      {subtitle ? <Text style={[styles.subtitulo, styles.subtitleText]}>{subtitle}</Text> : null}
       {children}
     </View>
   );
@@ -152,20 +152,20 @@ export default function App() {
           <ScreenShell title="Dashboard" subtitle="Resumo geral do desempenho acadêmico">
             <View style={styles.summaryGrid}>
               <View style={styles.summaryCard}>
-                <Text style={styles.summaryLabel}>Total</Text>
-                <Text style={styles.summaryValue}>{summary.total}</Text>
+                <Text style={[styles.textoBase, styles.summaryLabel]}>Total</Text>
+                <Text style={[styles.textoBase, styles.summaryValue]}>{summary.total}</Text>
               </View>
               <View style={styles.summaryCard}>
-                <Text style={styles.summaryLabel}>Média</Text>
-                <Text style={styles.summaryValue}>{summary.mediaGeral.toFixed(1)}</Text>
+                <Text style={[styles.textoBase, styles.summaryLabel]}>Média</Text>
+                <Text style={[styles.textoBase, styles.summaryValue]}>{summary.mediaGeral.toFixed(1)}</Text>
               </View>
               <View style={styles.summaryCard}>
-                <Text style={styles.summaryLabel}>Aprovados</Text>
-                <Text style={styles.summaryValue}>{summary.aprovados}</Text>
+                <Text style={[styles.textoBase, styles.summaryLabel]}>Aprovados</Text>
+                <Text style={[styles.textoBase, styles.summaryValue]}>{summary.aprovados}</Text>
               </View>
               <View style={styles.summaryCard}>
-                <Text style={styles.summaryLabel}>Atenção</Text>
-                <Text style={styles.summaryValue}>{summary.atencao}</Text>
+                <Text style={[styles.textoBase, styles.summaryLabel]}>Atenção</Text>
+                <Text style={[styles.textoBase, styles.summaryValue]}>{summary.atencao}</Text>
               </View>
             </View>
           </ScreenShell>
@@ -187,9 +187,10 @@ export default function App() {
                     onPress={() => setSelectedStudentId(student.id)}
                   >
                     <View style={styles.studentHeaderRow}>
-                      <Text style={styles.studentName}>{student.name}</Text>
+                      <Text style={[styles.textoBase, styles.studentName]}>{student.name}</Text>
                       <Text
                         style={[
+                          styles.textoBase,
                           styles.statusBadge,
                           status === 'Aprovado'
                             ? styles.statusPassed
@@ -201,12 +202,12 @@ export default function App() {
                         {status}
                       </Text>
                     </View>
-                    <Text style={styles.studentCourse}>{student.curso}</Text>
+                    <Text style={[styles.textoBase, styles.studentCourse]}>{student.curso}</Text>
                     <View style={styles.studentMetricsRow}>
-                      <Text style={styles.metricText}>Média: {average.toFixed(1)}</Text>
-                      <Text style={styles.metricText}>Notas: {Object.keys(student.notas).length}</Text>
+                      <Text style={[styles.textoBase, styles.metricText]}>Média: {average.toFixed(1)}</Text>
+                      <Text style={[styles.textoBase, styles.metricText]}>Notas: {Object.keys(student.notas).length}</Text>
                     </View>
-                    <Text style={styles.studentNotes}>
+                    <Text style={[styles.textoBase, styles.studentNotes]}>
                       {Object.entries(student.notas)
                         .map(([subjectName, value]) => `${subjectName}: ${value}`)
                         .join(' • ')}
@@ -229,7 +230,7 @@ export default function App() {
                 style={styles.input}
               />
               <Pressable style={styles.primaryButton} onPress={addStudent}>
-                <Text style={styles.primaryButtonText}>Cadastrar aluno</Text>
+                <Text style={[styles.textoBase, styles.primaryButtonText]}>Cadastrar aluno</Text>
               </Pressable>
             </KeyboardAvoidingView>
           </ScreenShell>
@@ -238,7 +239,7 @@ export default function App() {
         return (
           <ScreenShell title="Notas" subtitle="Registre e atualize as avaliações do aluno selecionado">
             <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-              <Text style={styles.label}>Aluno selecionado</Text>
+              <Text style={[styles.textoBase, styles.label]}>Aluno selecionado</Text>
               <View style={styles.pillContainer}>
                 {students.map((student) => (
                   <Pressable
@@ -251,6 +252,7 @@ export default function App() {
                   >
                     <Text
                       style={[
+                        styles.textoBase,
                         styles.pillText,
                         student.id === selectedStudentId && styles.pillTextSelected,
                       ]}
@@ -276,7 +278,7 @@ export default function App() {
                 style={styles.input}
               />
               <Pressable style={styles.primaryButton} onPress={addGrade}>
-                <Text style={styles.primaryButtonText}>Salvar nota</Text>
+                <Text style={[styles.textoBase, styles.primaryButtonText]}>Salvar nota</Text>
               </Pressable>
             </KeyboardAvoidingView>
           </ScreenShell>
@@ -286,20 +288,20 @@ export default function App() {
           <ScreenShell title="Relatórios" subtitle="Resumo de desempenho por categoria">
             <View style={styles.reportList}>
               <View style={styles.reportItem}>
-                <Text style={styles.reportTitle}>Média geral</Text>
-                <Text style={styles.reportValue}>{summary.mediaGeral.toFixed(1)}</Text>
+                <Text style={[styles.textoBase, styles.reportTitle]}>Média geral</Text>
+                <Text style={[styles.textoBase, styles.reportValue]}>{summary.mediaGeral.toFixed(1)}</Text>
               </View>
               <View style={styles.reportItem}>
-                <Text style={styles.reportTitle}>Aprovados</Text>
-                <Text style={styles.reportValue}>{summary.aprovados}</Text>
+                <Text style={[styles.textoBase, styles.reportTitle]}>Aprovados</Text>
+                <Text style={[styles.textoBase, styles.reportValue]}>{summary.aprovados}</Text>
               </View>
               <View style={styles.reportItem}>
-                <Text style={styles.reportTitle}>Em revisão</Text>
-                <Text style={styles.reportValue}>{students.filter((student) => getAverage(student.notas) >= 5 && getAverage(student.notas) < 7).length}</Text>
+                <Text style={[styles.textoBase, styles.reportTitle]}>Em revisão</Text>
+                <Text style={[styles.textoBase, styles.reportValue]}>{students.filter((student) => getAverage(student.notas) >= 5 && getAverage(student.notas) < 7).length}</Text>
               </View>
               <View style={styles.reportItem}>
-                <Text style={styles.reportTitle}>Atenção</Text>
-                <Text style={styles.reportValue}>{summary.atencao}</Text>
+                <Text style={[styles.textoBase, styles.reportTitle]}>Atenção</Text>
+                <Text style={[styles.textoBase, styles.reportValue]}>{summary.atencao}</Text>
               </View>
             </View>
           </ScreenShell>
@@ -308,10 +310,10 @@ export default function App() {
         return (
           <ScreenShell title="Configurações" subtitle="Informações do app acadêmico">
             <View style={styles.configBox}>
-              <Text style={styles.configText}>App: Academy Notes</Text>
-              <Text style={styles.configText}>Tipo: React Native + Expo</Text>
-              <Text style={styles.configText}>Modo: dados simulados</Text>
-              <Text style={styles.configText}>Objetivo: gestão de notas universitárias</Text>
+              <Text style={[styles.textoBase, styles.configText]}>App: Academy Notes</Text>
+              <Text style={[styles.textoBase, styles.configText]}>Tipo: React Native + Expo</Text>
+              <Text style={[styles.textoBase, styles.configText]}>Modo: dados simulados</Text>
+              <Text style={[styles.textoBase, styles.configText]}>Objetivo: gestão de notas universitárias</Text>
             </View>
           </ScreenShell>
         );
@@ -325,9 +327,9 @@ export default function App() {
       <StatusBar style="light" />
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.eyebrow}>Sistema acadêmico</Text>
-          <Text style={styles.title}>Academy Notes</Text>
-          <Text style={styles.subtitle}>Painel de desempenho e notas</Text>
+          <Text style={[styles.textoBase, styles.eyebrow]}>Sistema acadêmico</Text>
+          <Text style={[styles.titulo, styles.title]}>Academy Notes</Text>
+          <Text style={[styles.subtitulo, styles.subtitle]}>Painel de desempenho e notas</Text>
         </View>
 
         <View style={styles.tabBar}>
@@ -337,7 +339,7 @@ export default function App() {
               style={[styles.tabButton, activeScreen === screen && styles.tabButtonActive]}
               onPress={() => setActiveScreen(screen)}
             >
-              <Text style={[styles.tabText, activeScreen === screen && styles.tabTextActive]}>{screen}</Text>
+              <Text style={[styles.textoBase, styles.tabText, activeScreen === screen && styles.tabTextActive]}>{screen}</Text>
             </Pressable>
           ))}
         </View>
@@ -349,6 +351,21 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
+  titulo: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: colors.text,
+  },
+  subtitulo: {
+    fontSize: 15,
+    fontWeight: '400',
+    color: colors.textSoft,
+  },
+  textoBase: {
+    fontSize: 14,
+    fontWeight: '400',
+    color: colors.textSecondary,
+  },
   screen: {
     flex: 1,
     backgroundColor: colors.background,
