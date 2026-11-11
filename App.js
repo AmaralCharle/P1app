@@ -9,6 +9,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  useColorScheme,
   View,
 } from 'react-native';
 import { colors, radius, spacing } from './theme';
@@ -82,6 +83,7 @@ function ScreenShell({ title, subtitle, children }) {
 }
 
 export default function App() {
+  const colorScheme = useColorScheme();
   const [students, setStudents] = useState(initialStudents);
   const [newStudentName, setNewStudentName] = useState('');
   const [selectedStudentId, setSelectedStudentId] = useState(initialStudents[0].id);
@@ -323,7 +325,7 @@ export default function App() {
   };
 
   return (
-    <SafeAreaView style={styles.screen}>
+    <SafeAreaView style={[styles.screen, colorScheme === 'dark' && styles.darkScreen]}>
       <StatusBar style="light" />
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.header}>
@@ -368,6 +370,9 @@ const styles = StyleSheet.create({
   },
   screen: {
     flex: 1,
+    backgroundColor: colors.backgroundCard,
+  },
+  darkScreen: {
     backgroundColor: colors.background,
   },
   container: {
