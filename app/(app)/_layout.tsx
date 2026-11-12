@@ -1,8 +1,10 @@
 import {
   Pressable,
+  ScrollView,
   StyleSheet,
   Text,
   View,
+  useWindowDimensions,
 } from 'react-native';
 import {
   Redirect,
@@ -26,6 +28,8 @@ export default function AppLayout() {
   const { usuario } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
+  const { width } = useWindowDimensions();
+  const isMobile = width < 768;
 
   if (!usuario) {
     return <Redirect href="/login" />;
@@ -34,14 +38,32 @@ export default function AppLayout() {
   return (
     <StudentsProvider>
       <View style={styles.screen}>
-        <View style={styles.headerContainer}>
+        <View
+          style={[
+            styles.headerContainer,
+            {
+              flexDirection: isMobile ? 'column' : 'row',
+              alignItems: isMobile ? 'flex-start' : 'center',
+              gap: isMobile ? 16 : 0,
+              paddingTop: isMobile ? 40 : 24,
+            },
+          ]}
+        >
           <View style={styles.brand}>
             <Text style={styles.eyebrow}>Sistema acadêmico</Text>
             <Text style={styles.title}>Academy Notes</Text>
             <Text style={styles.subtitle}>Painel de desempenho e notas</Text>
           </View>
 
-          <View style={styles.navigation}>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{
+              gap: 12,
+              paddingBottom: 10,
+              paddingRight: 20,
+            }}
+          >
             {screenOrder.map(({ label, route }) => {
               const isActive =
                 route === '/'
@@ -68,7 +90,7 @@ export default function AppLayout() {
                 </Pressable>
               );
             })}
-          </View>
+          </ScrollView>
         </View>
 
         <View style={styles.content}>
@@ -95,12 +117,6 @@ const styles = StyleSheet.create({
   },
   brand: {
     flexShrink: 0,
-  },
-  navigation: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'flex-end',
-    gap: 12,
   },
   eyebrow: {
     color: '#93C5FD',
