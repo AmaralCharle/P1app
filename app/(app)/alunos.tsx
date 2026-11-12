@@ -10,13 +10,15 @@ import {
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, radius, spacing } from '../../theme';
-import { getAverage, getStatus, initialStudents } from '../../dados.js';
+import { getAverage, getStatus } from '../../dados.js';
+import { useStudents } from '../../StudentsContext';
 
 const statusFilters = ['Todos', 'Aprovado', 'Em revisão', 'Atenção'] as const;
 type StatusFilter = (typeof statusFilters)[number];
 
 export default function Alunos() {
   const router = useRouter();
+  const { students } = useStudents();
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('Todos');
   const [selectedStudentId, setSelectedStudentId] = useState<number | null>(
@@ -26,7 +28,7 @@ export default function Alunos() {
   const filteredStudents = useMemo(() => {
     const normalizedSearch = search.trim().toLocaleLowerCase();
 
-    return initialStudents.filter((student) => {
+    return students.filter((student) => {
       const matchesSearch = `${student.name} ${student.curso}`
         .toLocaleLowerCase()
         .includes(normalizedSearch);
@@ -36,7 +38,7 @@ export default function Alunos() {
 
       return matchesSearch && matchesStatus;
     });
-  }, [search, statusFilter]);
+  }, [students, search, statusFilter]);
 
   return (
     <SafeAreaView style={styles.screen}>

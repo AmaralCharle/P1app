@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import {
   Platform,
   ScrollView,
@@ -9,7 +9,8 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, radius, spacing } from '../../theme';
-import { getAverage, initialStudents } from '../../dados.js';
+import { getAverage } from '../../dados.js';
+import { useStudents } from '../../StudentsContext';
 
 type ScreenShellProps = {
   title: string;
@@ -31,7 +32,7 @@ function ScreenShell({ title, subtitle, children }: ScreenShellProps) {
 
 export default function Dashboard() {
   const colorScheme = useColorScheme();
-  const [students] = useState(initialStudents);
+  const { students } = useStudents();
 
   const summary = useMemo(() => {
     const total = students.length;

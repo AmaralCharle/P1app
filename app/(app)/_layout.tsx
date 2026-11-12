@@ -13,6 +13,7 @@ import {
   useRouter,
 } from 'expo-router';
 import { useAuth } from '../../AuthContext';
+import { StudentsProvider } from '../../StudentsContext';
 import { colors, radius, spacing } from '../../theme';
 
 const screenOrder = [
@@ -35,56 +36,58 @@ export default function AppLayout() {
   }
 
   return (
-    <View
-      style={[
-        styles.screen,
-        colorScheme === 'dark' && styles.darkScreen,
-      ]}
-    >
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <Text style={[styles.textoBase, styles.eyebrow]}>
-            Sistema acadêmico
-          </Text>
-          <Text style={[styles.titulo, styles.title]}>Academy Notes</Text>
-          <Text style={[styles.subtitulo, styles.subtitle]}>
-            Painel de desempenho e notas
-          </Text>
-        </View>
+    <StudentsProvider>
+      <View
+        style={[
+          styles.screen,
+          colorScheme === 'dark' && styles.darkScreen,
+        ]}
+      >
+        <View style={styles.container}>
+          <View style={styles.header}>
+            <Text style={[styles.textoBase, styles.eyebrow]}>
+              Sistema acadêmico
+            </Text>
+            <Text style={[styles.titulo, styles.title]}>Academy Notes</Text>
+            <Text style={[styles.subtitulo, styles.subtitle]}>
+              Painel de desempenho e notas
+            </Text>
+          </View>
 
-        <View style={styles.tabBar}>
-          {screenOrder.map(({ label, route }) => {
-            const isActive =
-              route === '/'
-                ? pathname === '/'
-                : pathname === route || pathname.startsWith(`${route}/`);
+          <View style={styles.tabBar}>
+            {screenOrder.map(({ label, route }) => {
+              const isActive =
+                route === '/'
+                  ? pathname === '/'
+                  : pathname === route || pathname.startsWith(`${route}/`);
 
-            return (
-              <Pressable
-                key={label}
-                style={[
-                  styles.tabButton,
-                  isActive && styles.tabButtonActive,
-                ]}
-                onPress={() => router.replace(route)}
-              >
-                <Text
+              return (
+                <Pressable
+                  key={label}
                   style={[
-                    styles.textoBase,
-                    styles.tabText,
-                    isActive && styles.tabTextActive,
+                    styles.tabButton,
+                    isActive && styles.tabButtonActive,
                   ]}
+                  onPress={() => router.replace(route)}
                 >
-                  {label}
-                </Text>
-              </Pressable>
-            );
-          })}
+                  <Text
+                    style={[
+                      styles.textoBase,
+                      styles.tabText,
+                      isActive && styles.tabTextActive,
+                    ]}
+                  >
+                    {label}
+                  </Text>
+                </Pressable>
+              );
+            })}
+          </View>
         </View>
-      </View>
 
-      <Slot />
-    </View>
+        <Slot />
+      </View>
+    </StudentsProvider>
   );
 }
 
