@@ -16,6 +16,7 @@ export type Student = {
 type StudentsContextValue = {
   students: Student[];
   addStudent: (name: string) => void;
+  updateGrade: (studentId: number, subject: string, grade: number) => void;
 };
 
 const StudentsContext = createContext<StudentsContextValue | undefined>(
@@ -41,8 +42,24 @@ export function StudentsProvider({ children }: PropsWithChildren) {
     setStudents((current) => [student, ...current]);
   };
 
+  const updateGrade = (studentId: number, subject: string, grade: number) => {
+    setStudents((current) =>
+      current.map((student) =>
+        student.id === studentId
+          ? {
+              ...student,
+              notas: {
+                ...student.notas,
+                [subject]: Number(grade.toFixed(1)),
+              },
+            }
+          : student
+      )
+    );
+  };
+
   return (
-    <StudentsContext.Provider value={{ students, addStudent }}>
+    <StudentsContext.Provider value={{ students, addStudent, updateGrade }}>
       {children}
     </StudentsContext.Provider>
   );
