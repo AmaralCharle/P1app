@@ -2,7 +2,6 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '../../AuthContext';
-import { colors, radius, spacing } from '../../theme';
 
 export default function Login() {
   const { entrar } = useAuth();
@@ -35,38 +34,43 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: colors.background,
-    padding: spacing.card,
+    alignItems: 'center',
+    backgroundColor: '#0A0F1E',
+    padding: 20,
   },
   card: {
-    backgroundColor: colors.backgroundCard,
-    borderRadius: radius.xl,
+    width: '100%',
+    maxWidth: 400,
+    backgroundColor: 'rgba(255, 255, 255, 0.03)',
     borderWidth: 1,
-    borderColor: colors.border,
-    padding: spacing.lg,
+    borderColor: 'rgba(255, 255, 255, 0.08)',
+    borderRadius: 24,
+    padding: 40,
+    alignItems: 'center',
   },
   title: {
-    color: colors.text,
-    fontSize: 28,
-    fontWeight: '800',
-    marginBottom: spacing.sm,
+    color: '#FFFFFF',
+    fontSize: 32,
+    fontWeight: 'bold',
+    marginBottom: 8,
+    textAlign: 'center',
   },
   subtitle: {
-    color: colors.textSoft,
-    fontSize: 15,
-    marginBottom: spacing.lg,
+    color: '#9CA3AF',
+    fontSize: 16,
+    marginBottom: 32,
+    textAlign: 'center',
   },
   button: {
+    width: '100%',
     alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: colors.primary,
-    borderRadius: radius.md,
-    paddingVertical: spacing.md,
-    paddingHorizontal: spacing.input,
+    backgroundColor: '#3B82F6',
+    paddingVertical: 16,
+    borderRadius: 12,
   },
   buttonText: {
-    color: colors.textInverse,
-    fontSize: 15,
-    fontWeight: '700',
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
