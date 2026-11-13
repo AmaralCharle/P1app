@@ -63,7 +63,7 @@ export default function LancarNotas() {
 
   return (
     <SafeAreaView edges={[]} style={styles.screen}>
-      <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled" keyboardDismissMode="on-drag">
         <View style={styles.card}>
           <Text style={styles.title}>Lançamento de Notas</Text>
           <Text style={styles.subtitle}>Aluno selecionado</Text>
@@ -84,6 +84,7 @@ export default function LancarNotas() {
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           >
             <TextInput
+              accessibilityLabel="Disciplina"
               value={subject}
               onChangeText={setSubject}
               placeholder="Disciplina"
@@ -91,10 +92,11 @@ export default function LancarNotas() {
               style={styles.input}
             />
             <TextInput
+              accessibilityLabel="Nota"
               value={grade}
               onChangeText={setGrade}
               placeholder="Nota"
-              keyboardType="numeric"
+              keyboardType="decimal-pad"
               placeholderTextColor={colors.placeholder}
               style={styles.input}
             />

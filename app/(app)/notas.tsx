@@ -14,6 +14,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, radius, spacing } from '../../theme';
 import { initialStudents } from '../../dados.js';
 import { useStudents } from '../../StudentsContext';
+import { parseGrade } from '../../academic';
 
 type ScreenShellProps = {
   title: string;
@@ -41,12 +42,20 @@ export default function Notas() {
   );
   const [subject, setSubject] = useState('Matemática');
   const [grade, setGrade] = useState('8.5');
+  const [feedback, setFeedback] = useState('');
+  const [error, setError] = useState('');
 
   const addGrade = () => {
-    const gradeValue = Number(grade);
-    if (!subject.trim() || Number.isNaN(gradeValue)) return;
+    const gradeValue = parseGrade(grade);
+    setFeedback('');
+    if (!subject.trim() || gradeValue === null) {
+      setError('Informe uma disciplina e uma nota de 0 a 10 (ex.: 8,5).');
+      return;
+    }
 
     updateGrade(selectedStudentId, subject.trim(), gradeValue);
+    setError('');
+    setFeedback('Nota salva para o aluno selecionado.');
     setGrade('');
     setSubject('Matemática');
   };
@@ -55,7 +64,7 @@ export default function Notas() {
     <SafeAreaView edges={[]}
       style={[styles.screen, colorScheme === 'dark' && styles.darkScreen]}
     >
-      <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled" keyboardDismissMode="on-drag">
         <ScreenShell
           title="Notas"
           subtitle="Registre e atualize as avaliações do aluno selecionado"
@@ -90,6 +99,7 @@ export default function Notas() {
               ))}
             </View>
             <TextInput
+              accessibilityLabel="Disciplina"
               value={subject}
               onChangeText={setSubject}
               placeholder="Disciplina"
@@ -97,14 +107,17 @@ export default function Notas() {
               style={styles.input}
             />
             <TextInput
+              accessibilityLabel="Nota"
               value={grade}
               onChangeText={setGrade}
               placeholder="Nota"
-              keyboardType="numeric"
+              keyboardType="decimal-pad"
               placeholderTextColor={colors.placeholder}
               style={styles.input}
             />
-            <Pressable style={styles.primaryButton} onPress={addGrade}>
+            {!!error && <Text accessibilityRole="alert" style={{ color: colors.danger, marginBottom: 12 }}>{error}</Text>}
+            {!!feedback && <Text accessibilityLiveRegion="polite" style={{ color: colors.success, marginBottom: 12 }}>{feedback}</Text>}
+            <Pressable accessibilityRole="button" style={styles.primaryButton} onPress={addGrade}>
               <Text style={[styles.textoBase, styles.primaryButtonText]}>
                 Salvar nota
               </Text>

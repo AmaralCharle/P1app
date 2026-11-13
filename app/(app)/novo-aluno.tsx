@@ -53,7 +53,7 @@ export default function NovoAluno() {
     <SafeAreaView edges={[]}
       style={[styles.screen, colorScheme === 'dark' && styles.darkScreen]}
     >
-      <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled" keyboardDismissMode="on-drag">
         <ScreenShell
           title="Adicionar aluno"
           subtitle="Cadastre um novo estudante no sistema"
@@ -62,6 +62,7 @@ export default function NovoAluno() {
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           >
             <TextInput
+              accessibilityLabel="Nome do aluno"
               value={newStudentName}
               onChangeText={setNewStudentName}
               placeholder="Nome do aluno"
