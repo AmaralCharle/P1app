@@ -47,7 +47,7 @@ export default function Agenda() {
         {!!error && <Text accessibilityRole="alert" style={ui.error}>{error}</Text>}
         {!!feedback && <Text accessibilityLiveRegion="polite" style={[ui.text, ui.success]}>{feedback}</Text>}
         <Action label="Adicionar compromisso" icon="plus" onPress={save} />
-        <Text style={ui.muted}>Nesta etapa os compromissos ficam na memória durante o uso do app.</Text>
+        <Text style={ui.muted}>Seus compromissos ficam salvos neste aparelho, mesmo ao fechar o app.</Text>
       </Card></View>
       <View style={ui.column}>
         <Text style={ui.heading}>Meus compromissos</Text>

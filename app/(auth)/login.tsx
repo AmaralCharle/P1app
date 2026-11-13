@@ -1,11 +1,11 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { useRouter } from 'expo-router';
+import { Redirect } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '../../AuthContext';
 
 export default function Login() {
-  const { entrar } = useAuth();
-  const router = useRouter();
+  const { entrar, usuario, saving } = useAuth();
+  if (usuario && !saving) return <Redirect href="/" />;
 
   return (
     <SafeAreaView style={styles.screen}>
@@ -18,12 +18,10 @@ export default function Login() {
         <Pressable
           accessibilityRole="button"
           style={styles.button}
-          onPress={() => {
-            entrar();
-            router.replace('/');
-          }}
+          disabled={saving}
+          onPress={() => { void entrar(); }}
         >
-          <Text style={styles.buttonText}>Entrar no Academy Notes</Text>
+          <Text style={styles.buttonText}>{saving ? 'Salvando sessão...' : 'Entrar no Academy Notes'}</Text>
         </Pressable>
       </View>
     </SafeAreaView>

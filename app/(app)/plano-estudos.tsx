@@ -25,7 +25,7 @@ export default function PlanoEstudos() {
         <View accessibilityRole="progressbar" accessibilityValue={{ min: 0, max: subjects.length || 1, now: completed.length }} style={{ height: 8, backgroundColor: '#203257', borderRadius: 8, overflow: 'hidden' }}>
           <View style={{ height: 8, backgroundColor: '#5b8cff', width: `${subjects.length ? completed.length / subjects.length * 100 : 0}%` }} />
         </View>
-        <Text style={ui.muted}>Tempo total sugerido: {totalMinutes} minutos. As revisões ficam marcadas durante esta sessão do app.</Text>
+        <Text style={ui.muted}>Tempo total sugerido: {totalMinutes} minutos. Suas revisões ficam salvas neste aparelho.</Text>
       </Card>
       {!subjects.length && <Card><Text style={ui.text}>Lance notas para começar o plano deste aluno.</Text></Card>}
       <Text style={ui.text}>As menores notas aparecem primeiro. Este plano usa regras simples com base nas notas cadastradas.</Text>

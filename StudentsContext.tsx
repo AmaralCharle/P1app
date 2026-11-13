@@ -1,10 +1,13 @@
 import {
   createContext,
   useContext,
-  useState,
   type PropsWithChildren,
 } from 'react';
 import { initialStudents } from './dados.js';
+import { usePersistedState } from './hooks/usePersistedState';
+import { storageKeys } from './services/storage';
+import { isStudentList } from './services/validators';
+import { PersistenceGate } from './components/PersistenceGate';
 
 export type Student = {
   id: number;
@@ -24,11 +27,13 @@ const StudentsContext = createContext<StudentsContextValue | undefined>(
 );
 
 export function StudentsProvider({ children }: PropsWithChildren) {
-  const [students, setStudents] = useState<Student[]>(initialStudents);
+  const persisted = usePersistedState<Student[]>(storageKeys.students, initialStudents, isStudentList);
+  const students = persisted.value;
+  const setStudents = persisted.update;
 
   const addStudent = (name: string) => {
     const student: Student = {
-      id: Date.now(),
+      id: Math.max(Date.now(), ...students.map(item => item.id + 1)),
       name: name.trim(),
       curso: 'Novo curso',
       notas: {
@@ -60,9 +65,9 @@ export function StudentsProvider({ children }: PropsWithChildren) {
   };
 
   return (
-    <StudentsContext.Provider value={{ students, addStudent, updateGrade }}>
+    <PersistenceGate ready={persisted.ready} error={persisted.error} saving={persisted.saving} retry={persisted.retry}><StudentsContext.Provider value={{ students, addStudent, updateGrade }}>
       {children}
-    </StudentsContext.Provider>
+    </StudentsContext.Provider></PersistenceGate>
   );
 }
 
