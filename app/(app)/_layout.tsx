@@ -15,6 +15,7 @@ import {
 import { useAuth } from '../../AuthContext';
 import { StudentsProvider } from '../../StudentsContext';
 import { AcademicProvider } from '../../AcademicContext';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const screenOrder = [
   { label: 'Dashboard', route: '/' },
@@ -43,21 +44,21 @@ export default function AppLayout() {
   return (
     <StudentsProvider>
       <AcademicProvider>
-      <View style={styles.screen}>
+      <SafeAreaView style={styles.screen}>
         <View
           style={[
             styles.headerContainer,
             {
               flexDirection: isMobile ? 'column' : 'row',
               alignItems: isMobile ? 'flex-start' : 'center',
-              gap: isMobile ? 16 : 0,
-              paddingTop: isMobile ? 40 : 24,
+              gap: isMobile ? 12 : 24,
+              padding: isMobile ? 16 : 24,
             },
           ]}
         >
           <View style={styles.brand}>
             <Text style={styles.eyebrow}>Sistema acadêmico</Text>
-            <Text style={styles.title}>Academy Notes</Text>
+            <Text style={[styles.title, isMobile && { fontSize: 28 }]}>Academy Notes</Text>
             <Text style={styles.subtitle}>Painel de desempenho e notas</Text>
           </View>
 
@@ -106,7 +107,7 @@ export default function AppLayout() {
         <View style={styles.content}>
           <Slot />
         </View>
-      </View>
+      </SafeAreaView>
       </AcademicProvider>
     </StudentsProvider>
   );

@@ -50,7 +50,7 @@ export default function Relatorios() {
   }, [students]);
 
   return (
-    <SafeAreaView
+    <SafeAreaView edges={[]}
       style={[styles.screen, colorScheme === 'dark' && styles.darkScreen]}
     >
       <ScrollView contentContainerStyle={styles.container}>

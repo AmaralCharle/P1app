@@ -1,15 +1,16 @@
 import type { ComponentProps, PropsWithChildren } from 'react';
 import { Feather } from '@expo/vector-icons';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 import { colors, radius, spacing } from '../theme';
 
 export function AcademicScreen({ title, subtitle, children }: PropsWithChildren<{ title: string; subtitle: string }>) {
-  return <ScrollView style={ui.screen} contentContainerStyle={ui.container} keyboardShouldPersistTaps="handled">
+  const { width } = useWindowDimensions();
+  return <KeyboardAvoidingView style={ui.screen} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}><ScrollView style={ui.screen} contentContainerStyle={[ui.container, width < 600 && { padding: 16 }]} keyboardShouldPersistTaps="handled" keyboardDismissMode="on-drag">
     <Text style={ui.eyebrow}>ACADEMY NOTES / ACADÊMICO</Text>
     <Text style={ui.title}>{title}</Text>
     <Text style={ui.subtitle}>{subtitle}</Text>
     {children}
-  </ScrollView>;
+  </ScrollView></KeyboardAvoidingView>;
 }
 
 export function Card({ children }: PropsWithChildren) {
@@ -32,7 +33,7 @@ export const ui = StyleSheet.create({
   title: { color: colors.text, fontSize: 28, fontWeight: '800' },
   subtitle: { color: colors.textSoft, fontSize: 14, lineHeight: 22, marginBottom: spacing.sm },
   grid: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.md },
-  column: { flexGrow: 1, flexBasis: 280, gap: spacing.md },
+  column: { flexGrow: 1, flexShrink: 1, flexBasis: 280, minWidth: 0, maxWidth: '100%', gap: spacing.md },
   card: { backgroundColor: colors.backgroundCard, borderWidth: 1, borderColor: colors.border, borderRadius: radius.xl, padding: spacing.card, gap: spacing.md },
   row: { flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', gap: spacing.mdCompact },
   spread: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: spacing.sm },
@@ -44,7 +45,7 @@ export const ui = StyleSheet.create({
   input: { backgroundColor: colors.backgroundSoft, color: colors.text, borderWidth: 1, borderColor: colors.borderInput, borderRadius: radius.md, padding: spacing.input, fontSize: 15, minHeight: 48 },
   button: { backgroundColor: colors.primaryDark, padding: spacing.input, borderRadius: radius.md, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: spacing.sm, minHeight: 48 },
   secondaryButton: { backgroundColor: colors.backgroundPill, borderWidth: 1, borderColor: colors.border },
-  buttonText: { color: colors.text, fontSize: 14, fontWeight: '700' },
+  buttonText: { color: colors.text, fontSize: 14, fontWeight: '700', flexShrink: 1, textAlign: 'center' },
   chip: { borderWidth: 1, borderColor: colors.borderInput, borderRadius: radius.full, paddingHorizontal: 14, paddingVertical: 10, minHeight: 44, justifyContent: 'center' },
   chipActive: { backgroundColor: colors.backgroundPill, borderColor: colors.primary },
   error: { color: colors.danger, fontSize: 14, lineHeight: 22 },

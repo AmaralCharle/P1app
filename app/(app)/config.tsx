@@ -35,7 +35,7 @@ export default function Config() {
   const { usuario, sair } = useAuth();
 
   return (
-    <SafeAreaView
+    <SafeAreaView edges={[]}
       style={[styles.screen, colorScheme === 'dark' && styles.darkScreen]}
     >
       <ScrollView contentContainerStyle={styles.container}>

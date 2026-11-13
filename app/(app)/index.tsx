@@ -54,7 +54,7 @@ export default function Dashboard() {
     summary.total ? (count / summary.total) * 100 : 0;
 
   return (
-    <SafeAreaView style={styles.screen}>
+    <SafeAreaView edges={[]} style={styles.screen}>
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.pageHeader}>
           <Text style={styles.pageTitle}>Dashboard</Text>
@@ -321,12 +321,18 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   distributionPanel: {
-    flex: 2,
-    minWidth: 300,
+    flexGrow: 2,
+    flexShrink: 1,
+    flexBasis: 300,
+    minWidth: 0,
+    maxWidth: '100%',
   },
   rankingPanel: {
-    flex: 1,
-    minWidth: 280,
+    flexGrow: 1,
+    flexShrink: 1,
+    flexBasis: 280,
+    minWidth: 0,
+    maxWidth: '100%',
   },
   panelTitle: {
     color: '#F8FAFC',

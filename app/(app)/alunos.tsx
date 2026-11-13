@@ -41,7 +41,7 @@ export default function Alunos() {
   }, [students, search, statusFilter]);
 
   return (
-    <SafeAreaView style={styles.screen}>
+    <SafeAreaView edges={[]} style={styles.screen}>
       <View style={styles.container}>
         <Text style={styles.title}>Alunos</Text>
         <Text style={styles.subtitle}>
@@ -248,20 +248,19 @@ const styles = StyleSheet.create({
   },
   studentHeaderRow: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.sm,
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: spacing.compact,
   },
   studentName: {
+    flexShrink: 1,
     color: colors.text,
     fontWeight: '700',
     fontSize: 18,
   },
   statusBadge: {
-    position: 'absolute',
-    top: 10,
-    right: 10,
-    zIndex: 1,
     fontSize: 11,
     fontWeight: '700',
     paddingHorizontal: spacing.sm,

@@ -46,7 +46,7 @@ export default function LancarNotas() {
 
   if (!Number.isFinite(studentId) || !student) {
     return (
-      <SafeAreaView style={styles.screen}>
+      <SafeAreaView edges={[]} style={styles.screen}>
         <View style={styles.card}>
           <Text style={styles.title}>Aluno não encontrado</Text>
           <Pressable
@@ -62,7 +62,7 @@ export default function LancarNotas() {
   }
 
   return (
-    <SafeAreaView style={styles.screen}>
+    <SafeAreaView edges={[]} style={styles.screen}>
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.card}>
           <Text style={styles.title}>Lançamento de Notas</Text>
