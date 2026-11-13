@@ -65,7 +65,7 @@ Os 13 testes cobrem médias, datas e notas inválidas, busca, prioridades e o se
 2. Conecte o computador e o celular à mesma rede Wi-Fi.
 3. Na pasta do projeto execute `npm run start:phone` e leia o QR code pelo Expo Go (Android) ou pela câmera (iPhone).
 4. Se o iPhone solicitar autenticação, entre com a mesma conta Expo no computador (`npx expo login`) e no Expo Go.
-5. Se a rede bloquear a conexão, use `npx expo start --tunnel` como alternativa.
+5. Se a rede bloquear a conexão e o Expo Go mostrar uma falha ao abrir o projeto, use `npm run start:tunnel` e escaneie o novo QR code. O projeto inclui `@expo/ngrok` como dependência de desenvolvimento para esse modo. O computador e o celular precisam de internet, mas podem estar em redes diferentes. O endereço do túnel muda ao reiniciar; use sempre o QR code do servidor atual.
 
 A API é pública e usa HTTPS: a consulta dos contatos não precisa de servidor local nem de configurar o IP do computador. O servidor Expo ainda precisa estar acessível ao celular para carregar o aplicativo.
 
