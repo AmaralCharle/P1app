@@ -6,13 +6,14 @@ import { AcademicScreen, Action, Card, ui } from '../../components/AcademicUI';
 import { colors } from '../../theme';
 
 export default function Agenda() {
-  const { events, addEvent, toggleEvent } = useAcademic();
+  const { events, addEvent, toggleEvent, removeEvent } = useAcademic();
   const [title, setTitle] = useState('');
   const [subject, setSubject] = useState('');
   const [date, setDate] = useState('');
   const [error, setError] = useState('');
   const [feedback, setFeedback] = useState('');
   const [filter, setFilter] = useState<'Todos' | 'Pendentes' | 'Concluídos'>('Todos');
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const visibleEvents = events.filter(event => filter === 'Todos' || (filter === 'Concluídos' ? event.done : !event.done));
 
   function save() {
@@ -48,6 +49,11 @@ export default function Agenda() {
           <View style={ui.spread}><Text style={ui.badge}>{formatAcademicDate(event.date)}</Text><Text style={event.done ? [ui.text, ui.success] : ui.muted}>{event.done ? 'Concluído' : 'Pendente'}</Text></View>
           <Text style={ui.heading}>{event.title}</Text><Text style={ui.text}>{event.subject}</Text>
           <Action label={event.done ? 'Reabrir compromisso' : 'Marcar como concluído'} icon={event.done ? 'rotate-ccw' : 'check'} secondary onPress={() => toggleEvent(event.id)} />
+          {deletingId === event.id ? <View style={[ui.divider, { gap: 12 }]}>
+            <Text style={ui.error}>Excluir este compromisso da agenda?</Text>
+            <Action label="Confirmar exclusão" icon="trash-2" secondary onPress={() => { removeEvent(event.id); setDeletingId(null); }} />
+            <Action label="Cancelar" icon="x" secondary onPress={() => setDeletingId(null)} />
+          </View> : <Action label="Excluir compromisso" icon="trash-2" secondary onPress={() => setDeletingId(event.id)} />}
         </Card>)}
       </View>
     </View>
