@@ -40,7 +40,7 @@ export const weatherStyles = StyleSheet.create({
   unit: { fontSize: 28, fontWeight: '500', letterSpacing: 0, color: colors.textSoft },
   condition: { color: colors.text, fontSize: 19, fontWeight: '700' },
   metrics: { flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginVertical: 8 },
-  metric: { backgroundColor: '#0c172c', borderRadius: 14, padding: 12, flexGrow: 1, flexBasis: 90, gap: 6 },
+  metric: { backgroundColor: '#0c172c', borderRadius: 14, padding: 10, flex: 1, minWidth: 0, gap: 6 },
   value: { color: colors.text, fontWeight: '800', fontSize: 16 },
   range: { color: colors.text, fontSize: 22, fontWeight: '800' },
 });
