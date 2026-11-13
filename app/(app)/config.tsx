@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   Platform,
+  Pressable,
   ScrollView,
   StyleSheet,
   Text,
@@ -9,6 +10,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, radius, spacing } from '../../theme';
+import { useAuth } from '../../AuthContext';
 
 type ScreenShellProps = {
   title: string;
@@ -30,6 +32,7 @@ function ScreenShell({ title, subtitle, children }: ScreenShellProps) {
 
 export default function Config() {
   const colorScheme = useColorScheme();
+  const { usuario, sair } = useAuth();
 
   return (
     <SafeAreaView
@@ -41,6 +44,7 @@ export default function Config() {
           subtitle="Informações do app acadêmico"
         >
           <View style={styles.configBox}>
+            <Text style={[styles.textoBase, styles.configText]}>Sessão: {usuario}</Text>
             <Text style={[styles.textoBase, styles.configText]}>
               App: Academy Notes
             </Text>
@@ -54,6 +58,9 @@ export default function Config() {
               Objetivo: gestão de notas universitárias
             </Text>
           </View>
+          <Pressable accessibilityRole="button" onPress={sair} style={{ marginTop: spacing.md, padding: spacing.input, borderRadius: radius.md, backgroundColor: colors.dangerBackground, alignItems: 'center' }}>
+            <Text style={{ color: colors.danger, fontWeight: '700' }}>Sair da conta</Text>
+          </Pressable>
         </ScreenShell>
       </ScrollView>
     </SafeAreaView>
