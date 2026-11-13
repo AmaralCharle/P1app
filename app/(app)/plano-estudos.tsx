@@ -1,11 +1,14 @@
+import { useTheme } from '../../ThemeContext';
 import { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { useStudents } from '../../StudentsContext';
-import { AcademicScreen, Action, Card, ui } from '../../components/AcademicUI';
+import { AcademicScreen, Action, Card, useAcademicStyles } from '../../components/AcademicUI';
 import { getStudyPlan } from '../../academic';
 import { useAcademic } from '../../AcademicContext';
 
 export default function PlanoEstudos() {
+  const { colors } = useTheme();
+  const ui = useAcademicStyles();
   const { students } = useStudents();
   const { completedSessions, toggleSession } = useAcademic();
   const [studentId, setStudentId] = useState<number | null>(students[0]?.id ?? null);
@@ -22,8 +25,8 @@ export default function PlanoEstudos() {
       <Text style={ui.heading}>Revisão de {student.name}</Text>
       <Card>
         <View style={ui.spread}><Text style={ui.heading}>{completed.length} de {subjects.length} revisões</Text><Text style={ui.badge}>{remainingMinutes} min restantes</Text></View>
-        <View accessibilityRole="progressbar" accessibilityValue={{ min: 0, max: subjects.length || 1, now: completed.length }} style={{ height: 8, backgroundColor: '#203257', borderRadius: 8, overflow: 'hidden' }}>
-          <View style={{ height: 8, backgroundColor: '#5b8cff', width: `${subjects.length ? completed.length / subjects.length * 100 : 0}%` }} />
+        <View accessibilityRole="progressbar" accessibilityValue={{ min: 0, max: subjects.length || 1, now: completed.length }} style={{ height: 8, backgroundColor: colors.border, borderRadius: 8, overflow: 'hidden' }}>
+          <View style={{ height: 8, backgroundColor: colors.primary, width: `${subjects.length ? completed.length / subjects.length * 100 : 0}%` }} />
         </View>
         <Text style={ui.muted}>Tempo total sugerido: {totalMinutes} minutos. Suas revisões ficam salvas neste aparelho.</Text>
       </Card>

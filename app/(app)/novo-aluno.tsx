@@ -1,3 +1,5 @@
+import type { ThemeColors } from '../../theme';
+import { useTheme } from '../../ThemeContext';
 import { useState } from 'react';
 import {
   KeyboardAvoidingView,
@@ -12,7 +14,7 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { colors, radius, spacing } from '../../theme';
+import { radius, spacing } from '../../theme';
 import { useStudents } from '../../StudentsContext';
 
 function ScreenShell({
@@ -24,6 +26,8 @@ function ScreenShell({
   subtitle: string;
   children: React.ReactNode;
 }) {
+  const { colors } = useTheme();
+  const styles = createStyles(colors);
   return (
     <View style={styles.card}>
       <Text style={[styles.titulo, styles.sectionTitle]}>{title}</Text>
@@ -36,6 +40,8 @@ function ScreenShell({
 }
 
 export default function NovoAluno() {
+  const { colors } = useTheme();
+  const styles = createStyles(colors);
   const colorScheme = useColorScheme();
   const router = useRouter();
   const { addStudent: registerStudent } = useStudents();
@@ -81,7 +87,7 @@ export default function NovoAluno() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (colors: ThemeColors) => StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: colors.backgroundCard,

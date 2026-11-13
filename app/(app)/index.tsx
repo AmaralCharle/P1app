@@ -1,3 +1,5 @@
+import type { ThemeColors } from '../../theme';
+import { useTheme } from '../../ThemeContext';
 import React, { useMemo } from 'react';
 import { Feather } from '@expo/vector-icons';
 import {
@@ -10,10 +12,13 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { getAverage, getStatus } from '../../dados.js';
 import { useStudents } from '../../StudentsContext';
 import { useRouter } from 'expo-router';
-import { Action, Card, ui } from '../../components/AcademicUI';
+import { Action, Card, useAcademicStyles } from '../../components/AcademicUI';
 import { useAcademic } from '../../AcademicContext';
 
 export default function Dashboard() {
+  const { colors } = useTheme();
+  const styles = createStyles(colors);
+  const ui = useAcademicStyles();
   const { students } = useStudents();
   const router = useRouter();
   const { events } = useAcademic();
@@ -66,13 +71,13 @@ export default function Dashboard() {
         <View style={[ui.grid, { marginBottom: 24 }]}>
           <View style={ui.column}><Card><Text style={ui.heading}>Explore as disciplinas</Text><Text style={ui.text}>Compare as médias e acompanhe as notas de cada matéria.</Text><Action label="Abrir disciplinas" icon="book-open" secondary onPress={() => router.push('/disciplinas')} /></Card></View>
           <View style={ui.column}><Card><Text style={ui.heading}>Sua rotina acadêmica</Text><Text style={ui.text}>{events.filter(event => !event.done).length} compromisso(s) pendente(s) na agenda.</Text><Action label="Organizar agenda" icon="calendar" secondary onPress={() => router.push('/agenda')} /><Action label="Ver plano de estudos" icon="target" secondary onPress={() => router.push('/plano-estudos')} /></Card></View>
-          <View style={ui.column}><Card><View style={ui.spread}><Text style={ui.heading}>Antes de sair para a aula</Text><Feather name="sun" color="#8ab4ff" size={24} /></View><Text style={ui.text}>Confira o clima real, a chance de chuva e a previsão por horário na cidade onde você estuda.</Text><Action label="Consultar clima" icon="cloud" secondary onPress={() => router.push('/clima')} /></Card></View>
+          <View style={ui.column}><Card><View style={ui.spread}><Text style={ui.heading}>Antes de sair para a aula</Text><Feather name="sun" color={colors.info} size={24} /></View><Text style={ui.text}>Confira o clima real, a chance de chuva e a previsão por horário na cidade onde você estuda.</Text><Action label="Consultar clima" icon="cloud" secondary onPress={() => router.push('/clima')} /></Card></View>
         </View>
         <View style={styles.summaryGrid}>
           <View style={[styles.metricCard, styles.totalCard]}>
             <View style={styles.metricHeader}>
               <Text style={styles.metricLabel}>Total de alunos</Text>
-              <Feather name="users" size={20} color="#3B82F6" />
+              <Feather name="users" size={20} color={colors.primary} />
             </View>
             <Text style={styles.metricValue}>{summary.total}</Text>
             <Text style={styles.metricCaption}>Estudantes cadastrados</Text>
@@ -216,10 +221,10 @@ export default function Dashboard() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (colors: ThemeColors) => StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: '#0A0F1E',
+    backgroundColor: colors.background,
   },
   container: {
     flexGrow: 1,
@@ -230,13 +235,13 @@ const styles = StyleSheet.create({
     marginBottom: 32,
   },
   pageTitle: {
-    color: '#FFFFFF',
+    color: colors.text,
     fontSize: 32,
     fontWeight: '800',
     marginBottom: 8,
   },
   pageSubtitle: {
-    color: '#94A3B8',
+    color: colors.textMuted,
     fontSize: 15,
   },
   summaryGrid: {
@@ -250,9 +255,9 @@ const styles = StyleSheet.create({
     minWidth: 220,
     padding: 20,
     borderRadius: 16,
-    backgroundColor: 'rgba(255, 255, 255, 0.03)',
+    backgroundColor: colors.backgroundCard,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.08)',
+    borderColor: colors.border,
     borderTopWidth: 3,
     shadowColor: '#000000',
     shadowOpacity: 0.2,
@@ -279,12 +284,12 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   metricLabel: {
-    color: '#94A3B8',
+    color: colors.textMuted,
     fontSize: 13,
     fontWeight: '600',
   },
   metricValue: {
-    color: '#F8FAFC',
+    color: colors.text,
     fontSize: 32,
     fontWeight: '800',
   },
@@ -294,12 +299,12 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   averageScale: {
-    color: '#64748B',
+    color: colors.textMuted,
     fontSize: 14,
     fontWeight: '600',
   },
   metricCaption: {
-    color: '#64748B',
+    color: colors.textMuted,
     fontSize: 12,
     marginTop: 8,
   },
@@ -312,9 +317,9 @@ const styles = StyleSheet.create({
   panel: {
     padding: 24,
     borderRadius: 16,
-    backgroundColor: 'rgba(255, 255, 255, 0.03)',
+    backgroundColor: colors.backgroundCard,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.08)',
+    borderColor: colors.border,
     shadowColor: '#000000',
     shadowOpacity: 0.2,
     shadowRadius: 12,
@@ -336,12 +341,12 @@ const styles = StyleSheet.create({
     maxWidth: '100%',
   },
   panelTitle: {
-    color: '#F8FAFC',
+    color: colors.text,
     fontSize: 18,
     fontWeight: '700',
   },
   panelSubtitle: {
-    color: '#64748B',
+    color: colors.textMuted,
     fontSize: 13,
     marginTop: 6,
   },
@@ -351,7 +356,7 @@ const styles = StyleSheet.create({
     height: 12,
     overflow: 'hidden',
     borderRadius: 999,
-    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    backgroundColor: colors.border,
     marginTop: 28,
     marginBottom: 24,
   },
@@ -390,12 +395,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#EF4444',
   },
   legendLabel: {
-    color: '#CBD5E1',
+    color: colors.textSoft,
     fontSize: 13,
     flex: 1,
   },
   legendValue: {
-    color: '#F8FAFC',
+    color: colors.text,
     fontSize: 13,
     fontWeight: '600',
   },
@@ -409,9 +414,9 @@ const styles = StyleSheet.create({
     gap: 12,
     padding: 12,
     borderRadius: 12,
-    backgroundColor: 'rgba(255,255,255,0.02)',
+    backgroundColor: colors.backgroundSoft,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.06)',
+    borderColor: colors.border,
   },
   rankBadge: {
     width: 30,
@@ -419,10 +424,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 15,
-    backgroundColor: 'rgba(59,130,246,0.16)',
+    backgroundColor: colors.backgroundPill,
   },
   rankNumber: {
-    color: '#93C5FD',
+    color: colors.info,
     fontSize: 13,
     fontWeight: '700',
   },
@@ -430,12 +435,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   studentName: {
-    color: '#F8FAFC',
+    color: colors.text,
     fontSize: 13,
     fontWeight: '700',
   },
   studentCourse: {
-    color: '#64748B',
+    color: colors.textMuted,
     fontSize: 11,
     marginTop: 4,
   },
@@ -443,7 +448,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   averageScore: {
-    color: '#F8FAFC',
+    color: colors.text,
     fontSize: 15,
     fontWeight: '800',
   },
@@ -453,12 +458,12 @@ const styles = StyleSheet.create({
     marginTop: 3,
   },
   statusApproved: {
-    color: '#34D399',
+    color: colors.success,
   },
   statusReview: {
-    color: '#FBBF24',
+    color: colors.warning,
   },
   statusAttention: {
-    color: '#F87171',
+    color: colors.danger,
   },
 });

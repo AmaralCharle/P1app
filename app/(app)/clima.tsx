@@ -1,18 +1,22 @@
-import { useCallback, useState, type ReactNode } from 'react';
+import { useTheme } from '../../ThemeContext';
+import { useCallback, useEffect, useState, type ReactNode } from 'react';
 import { ActivityIndicator, FlatList, Keyboard, KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, TextInput, View, useWindowDimensions } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { fetchWeather, hasWeatherApiKey } from '../../services/weather';
 import { useRemoteData } from '../../hooks/useRemoteData';
-import { Action, Card, ui } from '../../components/AcademicUI';
-import { WeatherAttribution, WeatherHero, WeatherTip, weatherStyles } from '../../components/WeatherUI';
+import { Action, Card, useAcademicStyles } from '../../components/AcademicUI';
+import { WeatherAttribution, WeatherHero, WeatherTip, useWeatherStyles } from '../../components/WeatherUI';
 import { weatherDate, weatherIcon } from '../../weatherPresentation';
-import { colors } from '../../theme';
 
 function ForecastResults({ city, header }: { city: string; header: ReactNode }) {
+  const { colors, setLastCity } = useTheme();
+  const ui = useAcademicStyles();
+  const weatherStyles = useWeatherStyles();
   const router = useRouter();
   const load = useCallback((signal: AbortSignal) => fetchWeather(city, signal), [city]);
   const { data, loading, error, reload } = useRemoteData(load);
+  useEffect(() => { if (data && !error) setLastCity(city); }, [data, error, city, setLastCity]);
   const { width } = useWindowDimensions();
   const days = data?.forecast.forecastday ?? [];
   return <FlatList style={ui.screen} contentContainerStyle={[ui.container, width < 600 && { padding: 16 }]}
@@ -39,8 +43,10 @@ function ForecastResults({ city, header }: { city: string; header: ReactNode }) 
 }
 
 export default function Clima() {
+  const { colors, lastCity } = useTheme();
+  const ui = useAcademicStyles();
   const { cidade } = useLocalSearchParams<{ cidade?: string }>();
-  const initialCity = typeof cidade === 'string' ? cidade : '';
+  const initialCity = typeof cidade === 'string' ? cidade : lastCity;
   const [draft, setDraft] = useState(initialCity);
   const [search, setSearch] = useState(initialCity ? { city: initialCity, revision: 0 } : null);
   const [error, setError] = useState('');

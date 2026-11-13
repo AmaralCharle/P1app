@@ -1,3 +1,5 @@
+import type { ThemeColors } from '../../theme';
+import { useTheme } from '../../ThemeContext';
 import React, { useMemo } from 'react';
 import {
   Platform,
@@ -8,7 +10,7 @@ import {
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { colors, radius, spacing } from '../../theme';
+import { radius, spacing } from '../../theme';
 import { getAverage } from '../../dados.js';
 import { useStudents } from '../../StudentsContext';
 
@@ -19,6 +21,8 @@ type ScreenShellProps = {
 };
 
 function ScreenShell({ title, subtitle, children }: ScreenShellProps) {
+  const { colors } = useTheme();
+  const styles = createStyles(colors);
   return (
     <View style={styles.card}>
       <Text style={[styles.titulo, styles.sectionTitle]}>{title}</Text>
@@ -31,6 +35,8 @@ function ScreenShell({ title, subtitle, children }: ScreenShellProps) {
 }
 
 export default function Relatorios() {
+  const { colors } = useTheme();
+  const styles = createStyles(colors);
   const colorScheme = useColorScheme();
   const { students } = useStudents();
 
@@ -104,7 +110,7 @@ export default function Relatorios() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (colors: ThemeColors) => StyleSheet.create({
   titulo: {
     fontSize: 20,
     fontWeight: '700',

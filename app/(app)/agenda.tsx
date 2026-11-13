@@ -1,12 +1,14 @@
+import { useTheme } from '../../ThemeContext';
 import { useState } from 'react';
 import { useRouter } from 'expo-router';
 import { Pressable, Text, TextInput, View } from 'react-native';
 import { useAcademic } from '../../AcademicContext';
 import { formatAcademicDate, parseAcademicDate } from '../../academic';
-import { AcademicScreen, Action, Card, ui } from '../../components/AcademicUI';
-import { colors } from '../../theme';
+import { AcademicScreen, Action, Card, useAcademicStyles } from '../../components/AcademicUI';
 
 export default function Agenda() {
+  const { colors } = useTheme();
+  const ui = useAcademicStyles();
   const router = useRouter();
   const { events, addEvent, toggleEvent, removeEvent } = useAcademic();
   const [title, setTitle] = useState('');

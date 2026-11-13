@@ -25,6 +25,7 @@ export function createPersistedStore<T>(initial: T, persistence: Persistence<T>,
     if (!state.ready) return Promise.resolve(false);
     const value = typeof next === 'function' ? (next as (current: T) => T)(state.value) : next;
     if (!validate(value)) return Promise.resolve(false);
+    if (Object.is(value, state.value) && !state.error) return Promise.resolve(true);
     const currentRevision = ++revision;
     publish({ value, ready: true, saving: true, error: null });
     const job = writes.catch(() => {}).then(() => persistence.write(value));

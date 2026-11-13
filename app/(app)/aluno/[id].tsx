@@ -1,3 +1,5 @@
+import type { ThemeColors } from '../../../theme';
+import { useTheme } from '../../../ThemeContext';
 import { useState } from 'react';
 import {
   KeyboardAvoidingView,
@@ -14,12 +16,14 @@ import {
   useRouter,
 } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { colors, radius, spacing } from '../../../theme';
+import { radius, spacing } from '../../../theme';
 import { initialStudents } from '../../../dados.js';
 import { useStudents } from '../../../StudentsContext';
 import { parseGrade } from '../../../academic';
 
 export default function LancarNotas() {
+  const { colors } = useTheme();
+  const styles = createStyles(colors);
   const { id } = useLocalSearchParams<{ id: string }>();
   const studentId = Number(id);
   const router = useRouter();
@@ -115,7 +119,7 @@ export default function LancarNotas() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (colors: ThemeColors) => StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: colors.background,

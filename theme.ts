@@ -24,6 +24,22 @@ export const colors = {
   dangerBackground: '#3b1d1d',
   danger: '#ff9a9a',
   info: '#8ab4ff',
+  weatherHero: '#101f3b',
+  weatherBorder: '#304f80',
+  weatherMetric: '#0c172c',
+};
+
+export type ThemeColors = typeof colors;
+export const lightColors: ThemeColors = {
+  ...colors,
+  primary: '#315fd4', primaryBorder: '#6d92e7',
+  background: '#f1f5fc', backgroundCard: '#ffffff', backgroundSoft: '#f6f8fd',
+  backgroundPill: '#e5edff', backgroundSelected: '#edf3ff',
+  text: '#182844', textSecondary: '#263b5c', textSoft: '#455b7a', textMuted: '#526783',
+  placeholder: '#627796', border: '#d6dfef', borderInput: '#bacbe2', borderStudent: '#c2d1e8', borderSelected: '#315fd4',
+  successBackground: '#e0f4ea', success: '#166344', warningBackground: '#fff1cb', warning: '#805700',
+  dangerBackground: '#fde9e9', danger: '#a52b36', info: '#254db3',
+  weatherHero: '#e9f0ff', weatherBorder: '#b9cbea', weatherMetric: '#ffffff',
 };
 
 export const spacing = {

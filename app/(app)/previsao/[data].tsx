@@ -1,15 +1,18 @@
+import { useTheme } from '../../../ThemeContext';
 import { useCallback } from 'react';
 import { ActivityIndicator, FlatList, Text, View, useWindowDimensions } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Feather } from '@expo/vector-icons';
 import { fetchWeather } from '../../../services/weather';
 import { useRemoteData } from '../../../hooks/useRemoteData';
-import { Action, Card, ui } from '../../../components/AcademicUI';
-import { WeatherAttribution, WeatherTip, weatherStyles } from '../../../components/WeatherUI';
+import { Action, Card, useAcademicStyles } from '../../../components/AcademicUI';
+import { WeatherAttribution, WeatherTip, useWeatherStyles } from '../../../components/WeatherUI';
 import { weatherDate, weatherIcon } from '../../../weatherPresentation';
-import { colors } from '../../../theme';
 
 export default function Previsao() {
+  const { colors } = useTheme();
+  const ui = useAcademicStyles();
+  const weatherStyles = useWeatherStyles();
   const { data: date, cidade: city } = useLocalSearchParams<{ data: string; cidade: string }>();
   const router = useRouter();
   const { width } = useWindowDimensions();

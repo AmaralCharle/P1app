@@ -1,9 +1,13 @@
+import type { ThemeColors } from '../../theme';
+import { useTheme } from '../../ThemeContext';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Redirect } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '../../AuthContext';
 
 export default function Login() {
+  const { colors } = useTheme();
+  const styles = createStyles(colors);
   const { entrar, usuario, saving } = useAuth();
   if (usuario && !saving) return <Redirect href="/" />;
 
@@ -28,33 +32,33 @@ export default function Login() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (colors: ThemeColors) => StyleSheet.create({
   screen: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#0A0F1E',
+    backgroundColor: colors.background,
     padding: 20,
   },
   card: {
     width: '100%',
     maxWidth: 400,
-    backgroundColor: 'rgba(255, 255, 255, 0.03)',
+    backgroundColor: colors.backgroundCard,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.08)',
+    borderColor: colors.border,
     borderRadius: 24,
     padding: 40,
     alignItems: 'center',
   },
   title: {
-    color: '#FFFFFF',
+    color: colors.text,
     fontSize: 32,
     fontWeight: 'bold',
     marginBottom: 8,
     textAlign: 'center',
   },
   subtitle: {
-    color: '#9CA3AF',
+    color: colors.textSoft,
     fontSize: 16,
     marginBottom: 32,
     textAlign: 'center',
@@ -62,12 +66,12 @@ const styles = StyleSheet.create({
   button: {
     width: '100%',
     alignItems: 'center',
-    backgroundColor: '#3B82F6',
+    backgroundColor: colors.primary,
     paddingVertical: 16,
     borderRadius: 12,
   },
   buttonText: {
-    color: '#FFFFFF',
+    color: colors.textInverse,
     fontSize: 16,
     fontWeight: 'bold',
   },

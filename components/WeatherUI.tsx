@@ -1,12 +1,16 @@
+import type { ThemeColors } from '../theme';
+import { useTheme } from '../ThemeContext';
 import { Feather } from '@expo/vector-icons';
 import { Link } from 'expo-router';
 import { StyleSheet, Text, View } from 'react-native';
 import type { WeatherForecast } from '../types/weather';
-import { Card, ui } from './AcademicUI';
-import { colors } from '../theme';
+import { Card, useAcademicStyles } from './AcademicUI';
 import { weatherIcon, weatherStudyTip } from '../weatherPresentation';
 
 export function WeatherHero({ weather }: { weather: WeatherForecast }) {
+  const { colors } = useTheme();
+  const ui = useAcademicStyles();
+  const weatherStyles = useWeatherStyles();
   const today = weather.forecast.forecastday[0];
   return <View style={weatherStyles.hero}>
     <View style={ui.spread}><Text style={weatherStyles.kicker}>ANTES DE SAIR PARA A AULA</Text><Feather name="map-pin" color={colors.info} size={20} /></View>
@@ -25,22 +29,31 @@ export function WeatherHero({ weather }: { weather: WeatherForecast }) {
 }
 
 export function WeatherTip({ chanceOfRain, maxTemperature }: { chanceOfRain: number; maxTemperature: number }) {
+  const { colors } = useTheme();
+  const ui = useAcademicStyles();
   return <Card><View style={ui.row}><Feather name="briefcase" color={colors.info} size={22} /><Text style={ui.heading}>Prepare sua mochila</Text></View><Text style={ui.text}>{weatherStudyTip(chanceOfRain, maxTemperature)}</Text><Text style={ui.muted}>Sugestão de organização com base na previsão, que pode mudar.</Text></Card>;
 }
 
 export function WeatherAttribution() {
+  const { colors } = useTheme();
+  const ui = useAcademicStyles();
   return <View style={{ gap: 6, paddingVertical: 12 }}><Link href="https://www.weatherapi.com/" style={[ui.muted, { color: colors.info }]}>Dados meteorológicos: WeatherAPI.com ↗</Link><Text style={ui.muted}>Previsão de tempo para a cidade consultada. Sem acesso ao GPS.</Text></View>;
 }
 
-export const weatherStyles = StyleSheet.create({
-  hero: { backgroundColor: '#101f3b', borderColor: '#304f80', borderWidth: 1, borderRadius: 24, padding: 22, gap: 10 },
+const createWeatherStyles = (colors: ThemeColors) => StyleSheet.create({
+  hero: { backgroundColor: colors.weatherHero, borderColor: colors.weatherBorder, borderWidth: 1, borderRadius: 24, padding: 22, gap: 10 },
   kicker: { color: colors.info, fontSize: 10, letterSpacing: 1.1, fontWeight: '800', flexShrink: 1 },
   city: { color: colors.text, fontSize: 26, fontWeight: '800' },
   temperature: { color: colors.text, fontSize: 72, fontWeight: '800', letterSpacing: -3 },
   unit: { fontSize: 28, fontWeight: '500', letterSpacing: 0, color: colors.textSoft },
   condition: { color: colors.text, fontSize: 19, fontWeight: '700' },
   metrics: { flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginVertical: 8 },
-  metric: { backgroundColor: '#0c172c', borderRadius: 14, padding: 10, flex: 1, minWidth: 0, gap: 6 },
+  metric: { backgroundColor: colors.weatherMetric, borderRadius: 14, padding: 10, flex: 1, minWidth: 0, gap: 6 },
   value: { color: colors.text, fontWeight: '800', fontSize: 16 },
   range: { color: colors.text, fontSize: 22, fontWeight: '800' },
 });
+
+export function useWeatherStyles() {
+  const { colors } = useTheme();
+  return createWeatherStyles(colors);
+}

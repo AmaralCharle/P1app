@@ -1,3 +1,5 @@
+import type { ThemeColors } from '../../theme';
+import { useTheme } from '../../ThemeContext';
 import {
   Pressable,
   ScrollView,
@@ -31,6 +33,8 @@ const screenOrder = [
 ] as const;
 
 export default function AppLayout() {
+  const { colors } = useTheme();
+  const styles = createStyles(colors);
   const { usuario } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
@@ -113,10 +117,10 @@ export default function AppLayout() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (colors: ThemeColors) => StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: '#0A0F1E',
+    backgroundColor: colors.background,
   },
   headerContainer: {
     maxWidth: 1200,
@@ -131,7 +135,7 @@ const styles = StyleSheet.create({
     flexShrink: 0,
   },
   eyebrow: {
-    color: '#93C5FD',
+    color: colors.info,
     fontWeight: '700',
     letterSpacing: 1.2,
     textTransform: 'uppercase',
@@ -139,13 +143,13 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   title: {
-    color: '#FFFFFF',
+    color: colors.text,
     fontSize: 32,
     fontWeight: '800',
     marginBottom: 4,
   },
   subtitle: {
-    color: '#CBD5E1',
+    color: colors.textSoft,
     fontSize: 15,
   },
   tabButton: {
@@ -157,20 +161,20 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   tabButtonActive: {
-    backgroundColor: '#1D4ED8',
-    borderColor: '#1D4ED8',
+    backgroundColor: colors.primaryDark,
+    borderColor: colors.primaryDark,
   },
   tabButtonInactive: {
     backgroundColor: 'transparent',
-    borderColor: 'rgba(255,255,255,0.1)',
+    borderColor: colors.border,
   },
   tabText: {
-    color: '#CBD5E1',
+    color: colors.textSoft,
     fontSize: 12,
     fontWeight: '600',
   },
   tabTextActive: {
-    color: '#FFFFFF',
+    color: colors.textInverse,
   },
   content: {
     flex: 1,

@@ -1,9 +1,13 @@
+import type { ThemeColors } from '../theme';
+import { useTheme } from '../ThemeContext';
 import type { ComponentProps, PropsWithChildren } from 'react';
 import { Feather } from '@expo/vector-icons';
 import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
-import { colors, radius, spacing } from '../theme';
+import { radius, spacing } from '../theme';
 
 export function AcademicScreen({ title, subtitle, children }: PropsWithChildren<{ title: string; subtitle: string }>) {
+  const { colors } = useTheme();
+  const ui = useAcademicStyles();
   const { width } = useWindowDimensions();
   return <KeyboardAvoidingView style={ui.screen} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}><ScrollView style={ui.screen} contentContainerStyle={[ui.container, width < 600 && { padding: 16 }]} keyboardShouldPersistTaps="handled" keyboardDismissMode="on-drag">
     <Text style={ui.eyebrow}>ACADEMY NOTES / ACADÊMICO</Text>
@@ -14,20 +18,24 @@ export function AcademicScreen({ title, subtitle, children }: PropsWithChildren<
 }
 
 export function Card({ children }: PropsWithChildren) {
+  const { colors } = useTheme();
+  const ui = useAcademicStyles();
   return <View style={ui.card}>{children}</View>;
 }
 
 export function Action({ label, onPress, icon = 'arrow-right', secondary = false }: {
   label: string; onPress: () => void; icon?: ComponentProps<typeof Feather>['name']; secondary?: boolean;
 }) {
+  const { colors } = useTheme();
+  const ui = useAcademicStyles();
   return <Pressable accessibilityRole="button" onPress={onPress}
     style={({ pressed }) => [ui.button, secondary && ui.secondaryButton, pressed && { opacity: 0.7 }]}>
-    <Text style={ui.buttonText}>{label}</Text><Feather name={icon} size={17} color={colors.text} />
+    <Text style={[ui.buttonText, { color: secondary ? colors.text : colors.textInverse }]}>{label}</Text><Feather name={icon} size={17} color={secondary ? colors.text : colors.textInverse} />
   </Pressable>;
 }
 
-export const ui = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: '#0A0F1E' },
+const createAcademicStyles = (colors: ThemeColors) => StyleSheet.create({
+  screen: { flex: 1, backgroundColor: colors.background },
   container: { padding: spacing.lg, paddingBottom: spacing.bottom, gap: spacing.md },
   eyebrow: { color: colors.info, fontSize: 11, fontWeight: '700', letterSpacing: 1.4 },
   title: { color: colors.text, fontSize: 28, fontWeight: '800' },
@@ -52,3 +60,8 @@ export const ui = StyleSheet.create({
   success: { color: colors.success },
   divider: { borderTopWidth: 1, borderColor: colors.border, paddingTop: spacing.md },
 });
+
+export function useAcademicStyles() {
+  const { colors } = useTheme();
+  return createAcademicStyles(colors);
+}

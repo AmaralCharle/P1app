@@ -1,3 +1,5 @@
+import type { ThemeColors } from '../../theme';
+import { useTheme } from '../../ThemeContext';
 import { useMemo, useState } from 'react';
 import {
   Pressable,
@@ -9,7 +11,7 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { colors, radius, spacing } from '../../theme';
+import { radius, spacing } from '../../theme';
 import { getAverage, getStatus } from '../../dados.js';
 import { useStudents } from '../../StudentsContext';
 
@@ -17,6 +19,8 @@ const statusFilters = ['Todos', 'Aprovado', 'Em revisão', 'Atenção'] as const
 type StatusFilter = (typeof statusFilters)[number];
 
 export default function Alunos() {
+  const { colors } = useTheme();
+  const styles = createStyles(colors);
   const router = useRouter();
   const { students } = useStudents();
   const [search, setSearch] = useState('');
@@ -164,7 +168,7 @@ export default function Alunos() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (colors: ThemeColors) => StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: colors.background,

@@ -1,15 +1,18 @@
+import type { ThemeColors } from '../../theme';
+import { useTheme } from '../../ThemeContext';
 import React from 'react';
 import {
   Platform,
   Pressable,
   ScrollView,
+  Switch,
   StyleSheet,
   Text,
   useColorScheme,
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { colors, radius, spacing } from '../../theme';
+import { radius, spacing } from '../../theme';
 import { useAuth } from '../../AuthContext';
 
 type ScreenShellProps = {
@@ -19,6 +22,8 @@ type ScreenShellProps = {
 };
 
 function ScreenShell({ title, subtitle, children }: ScreenShellProps) {
+  const { colors } = useTheme();
+  const styles = createStyles(colors);
   return (
     <View style={styles.card}>
       <Text style={[styles.titulo, styles.sectionTitle]}>{title}</Text>
@@ -31,6 +36,8 @@ function ScreenShell({ title, subtitle, children }: ScreenShellProps) {
 }
 
 export default function Config() {
+  const { colors, mode, setMode, lastCity } = useTheme();
+  const styles = createStyles(colors);
   const colorScheme = useColorScheme();
   const { usuario, sair } = useAuth();
 
@@ -44,6 +51,10 @@ export default function Config() {
           subtitle="Informações do app acadêmico"
         >
           <View style={styles.configBox}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 16, marginBottom: 16 }}>
+              <View style={{ flex: 1 }}><Text style={[styles.textoBase, styles.configText]}>Tema escuro</Text><Text style={{ color: colors.textMuted, fontSize: 12 }}>Sua escolha fica salva neste aparelho.</Text></View>
+              <Switch accessibilityLabel="Tema escuro" value={mode === 'dark'} onValueChange={value => setMode(value ? 'dark' : 'light')} trackColor={{ false: colors.borderInput, true: colors.primaryDark }} thumbColor={colors.textInverse} />
+            </View>
             <Text style={[styles.textoBase, styles.configText]}>Sessão: {usuario}</Text>
             <Text style={[styles.textoBase, styles.configText]}>
               App: Academy Notes
@@ -52,11 +63,13 @@ export default function Config() {
               Tipo: React Native + Expo
             </Text>
             <Text style={[styles.textoBase, styles.configText]}>
-              Modo: dados simulados
+              Dados acadêmicos: salvos neste aparelho
             </Text>
             <Text style={[styles.textoBase, styles.configText]}>
               Objetivo: gestão de notas universitárias
             </Text>
+            <Text style={[styles.textoBase, styles.configText]}>Última cidade: {lastCity || 'Nenhuma consulta ainda'}</Text>
+            <Text style={[styles.textoBase, styles.configText]}>Clima: consulta real com cache local</Text>
           </View>
           <Pressable accessibilityRole="button" onPress={sair} style={{ marginTop: spacing.md, padding: spacing.input, borderRadius: radius.md, backgroundColor: colors.dangerBackground, alignItems: 'center' }}>
             <Text style={{ color: colors.danger, fontWeight: '700' }}>Sair da conta</Text>
@@ -67,7 +80,7 @@ export default function Config() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (colors: ThemeColors) => StyleSheet.create({
   titulo: {
     fontSize: 20,
     fontWeight: '700',

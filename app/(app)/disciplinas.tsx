@@ -1,13 +1,15 @@
+import { useTheme } from '../../ThemeContext';
 import { useState } from 'react';
 import { Feather } from '@expo/vector-icons';
 import { Text, TextInput, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useStudents } from '../../StudentsContext';
 import { getSubjects, getSubjectSummary, normalizeSearch } from '../../academic';
-import { AcademicScreen, Action, Card, ui } from '../../components/AcademicUI';
-import { colors } from '../../theme';
+import { AcademicScreen, Action, Card, useAcademicStyles } from '../../components/AcademicUI';
 
 export default function Disciplinas() {
+  const { colors } = useTheme();
+  const ui = useAcademicStyles();
   const { students } = useStudents();
   const router = useRouter();
   const [search, setSearch] = useState('');

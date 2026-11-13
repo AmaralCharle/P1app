@@ -1,11 +1,14 @@
+import { useTheme } from '../../../ThemeContext';
 import { Text, View } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useStudents } from '../../../StudentsContext';
 import { getSubjects, getSubjectSummary } from '../../../academic';
-import { AcademicScreen, Action, Card, ui } from '../../../components/AcademicUI';
+import { AcademicScreen, Action, Card, useAcademicStyles } from '../../../components/AcademicUI';
 import { getStatus } from '../../../dados';
 
 export default function Disciplina() {
+  const { colors } = useTheme();
+  const ui = useAcademicStyles();
   const { nome } = useLocalSearchParams<{ nome: string }>();
   const { students } = useStudents();
   const router = useRouter();
