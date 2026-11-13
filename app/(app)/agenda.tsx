@@ -14,7 +14,12 @@ export default function Agenda() {
   const [feedback, setFeedback] = useState('');
   const [filter, setFilter] = useState<'Todos' | 'Pendentes' | 'Concluídos'>('Todos');
   const [deletingId, setDeletingId] = useState<string | null>(null);
-  const visibleEvents = events.filter(event => filter === 'Todos' || (filter === 'Concluídos' ? event.done : !event.done));
+  const now = new Date();
+  const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+  const visibleEvents = events
+    .filter(event => filter === 'Todos' || (filter === 'Concluídos' ? event.done : !event.done))
+    .sort((a, b) => Number(a.done) - Number(b.done) || a.date.localeCompare(b.date));
+  const overdue = events.filter(event => !event.done && event.date < today).length;
 
   function save() {
     const parsed = parseAcademicDate(date);
@@ -29,6 +34,7 @@ export default function Agenda() {
   }
 
   return <AcademicScreen title="Agenda acadêmica" subtitle="Organize provas, entregas e revisões em um só lugar.">
+    <Card><View style={ui.spread}><Text style={ui.text}>{events.filter(event => !event.done).length} compromisso(s) pendente(s)</Text><Text style={overdue ? ui.error : ui.muted}>{overdue ? `${overdue} com prazo vencido` : 'Nenhum prazo vencido'}</Text></View></Card>
     <View style={ui.grid}>
       <View style={ui.column}><Card>
         <Text style={ui.heading}>Novo compromisso</Text>
@@ -47,6 +53,7 @@ export default function Agenda() {
         {!!events.length && !visibleEvents.length && <Card><Text style={ui.text}>Nenhum compromisso neste filtro.</Text></Card>}
         {visibleEvents.map(event => <Card key={event.id}>
           <View style={ui.spread}><Text style={ui.badge}>{formatAcademicDate(event.date)}</Text><Text style={event.done ? [ui.text, ui.success] : ui.muted}>{event.done ? 'Concluído' : 'Pendente'}</Text></View>
+          {!event.done && event.date <= today && <Text style={event.date < today ? ui.error : ui.success}>{event.date < today ? 'Prazo vencido' : 'Prazo para hoje'}</Text>}
           <Text style={ui.heading}>{event.title}</Text><Text style={ui.text}>{event.subject}</Text>
           <Action label={event.done ? 'Reabrir compromisso' : 'Marcar como concluído'} icon={event.done ? 'rotate-ccw' : 'check'} secondary onPress={() => toggleEvent(event.id)} />
           {deletingId === event.id ? <View style={[ui.divider, { gap: 12 }]}>
