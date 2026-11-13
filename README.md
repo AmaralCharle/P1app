@@ -15,22 +15,22 @@ Abra pelo Expo Go compatível com o SDK do projeto ou use `npm run web` no naveg
 
 ## 14 telas navegáveis
 
-| Tela | Rota | Funcionalidade |
-| --- | --- | --- |
-| Login | `/login` | Entrada demonstrativa |
-| Dashboard | `/` | Indicadores da turma e atalhos |
-| Alunos | `/alunos` | Consulta dos alunos |
-| Adicionar aluno | `/novo-aluno` | Cadastro de estudante |
-| Notas | `/notas` | Seleção para lançamento |
-| Notas do aluno | `/aluno/[id]` | Editar notas entre 0 e 10, com ponto ou vírgula |
-| Relatórios | `/relatorios` | Desempenho acadêmico |
-| Configurações | `/config` | Informações e saída da sessão |
-| Disciplinas | `/disciplinas` | Busca sem acentos e média por matéria |
-| Detalhe da disciplina | `/disciplina/[nome]` | Notas dos alunos e acesso à edição |
-| Agenda acadêmica | `/agenda` | Cadastro, filtros, conclusão e exclusão com confirmação |
-| Plano de estudos | `/plano-estudos` | Revisão por aluno, prioridades, tempo e progresso |
-| Clima para sua rotina | `/clima` | Clima real por cidade, previsão de 3 dias e atualização |
-| Previsão por horário | `/previsao/[data]` | Temperatura e chance de chuva por horário do dia selecionado |
+| Tela                  | Rota                 | Funcionalidade                                               |
+| --------------------- | -------------------- | ------------------------------------------------------------ |
+| Login                 | `/login`             | Entrada demonstrativa                                        |
+| Dashboard             | `/`                  | Indicadores da turma e atalhos                               |
+| Alunos                | `/alunos`            | Consulta dos alunos                                          |
+| Adicionar aluno       | `/novo-aluno`        | Cadastro de estudante                                        |
+| Notas                 | `/notas`             | Seleção para lançamento                                      |
+| Notas do aluno        | `/aluno/[id]`        | Editar notas entre 0 e 10, com ponto ou vírgula              |
+| Relatórios            | `/relatorios`        | Desempenho acadêmico                                         |
+| Configurações         | `/config`            | Informações e saída da sessão                                |
+| Disciplinas           | `/disciplinas`       | Busca sem acentos e média por matéria                        |
+| Detalhe da disciplina | `/disciplina/[nome]` | Notas dos alunos e acesso à edição                           |
+| Agenda acadêmica      | `/agenda`            | Cadastro, filtros, conclusão e exclusão com confirmação      |
+| Plano de estudos      | `/plano-estudos`     | Revisão por aluno, prioridades, tempo e progresso            |
+| Clima para sua rotina | `/clima`             | Clima real por cidade, previsão de 3 dias e atualização      |
+| Previsão por horário  | `/previsao/[data]`   | Temperatura e chance de chuva por horário do dia selecionado |
 
 Os arquivos `_layout.tsx` são layouts de navegação e não entram na contagem. As rotas dinâmicas contam como uma tela cada, independentemente da quantidade de alunos ou matérias.
 
@@ -38,7 +38,7 @@ Os arquivos `_layout.tsx` são layouts de navegação e não entram na contagem.
 
 - Disciplinas e médias são calculadas a partir das notas do estado do app.
 - A agenda valida datas, ordena por prazo e destaca compromissos vencidos ou para hoje.
-- O plano sugere 40 minutos para notas abaixo de 5, 30 para notas de 5 até abaixo de 7 e 20 para notas a partir de 7. São regras locais, sem inteligência artificial.
+- O plano sugere 40 minutos para notas abaixo de 5, 30 para notas de 5 até abaixo de 7 e 20 para notas a partir de 7.
 - Revisões concluídas são separadas por aluno e disciplina.
 - Alunos, notas, agenda e revisões são restaurados do armazenamento local ao abrir o app. O tema e a última cidade também ficam salvos.
 
@@ -63,20 +63,20 @@ Os 35 testes cobrem médias, notas e datas, busca, prioridades, WeatherAPI, leit
 
 As chaves são versionadas com o prefixo `academy:v1:`. O app lê o disco antes de decidir a rota ou exibir os dados acadêmicos; os valores iniciais não são gravados por cima dos valores existentes durante a hidratação. Alterações consecutivas são gravadas em ordem.
 
-| Informação | Onde fica | Comportamento |
-| --- | --- | --- |
-| Sessão demonstrativa Admin | AsyncStorage | Restaura ao abrir; removida ao sair |
-| Tema e última cidade | AsyncStorage | Preferências do aparelho; preservadas ao sair |
-| Alunos e notas | AsyncStorage | Dados acadêmicos locais; preservados ao sair |
-| Agenda e revisões concluídas | AsyncStorage | Restauradas com os dados acadêmicos |
-| Clima por cidade e data da consulta | AsyncStorage | Cache válido por 5 minutos; removido ao sair |
-| Chave WeatherAPI | `.env.local` | Não é gravada no AsyncStorage nem versionada no Git |
+| Informação                          | Onde fica    | Comportamento                                       |
+| ----------------------------------- | ------------ | --------------------------------------------------- |
+| Sessão demonstrativa Admin          | AsyncStorage | Restaura ao abrir; removida ao sair                 |
+| Tema e última cidade                | AsyncStorage | Preferências do aparelho; preservadas ao sair       |
+| Alunos e notas                      | AsyncStorage | Dados acadêmicos locais; preservados ao sair        |
+| Agenda e revisões concluídas        | AsyncStorage | Restauradas com os dados acadêmicos                 |
+| Clima por cidade e data da consulta | AsyncStorage | Cache válido por 5 minutos; removido ao sair        |
+| Chave WeatherAPI                    | `.env.local` | Não é gravada no AsyncStorage nem versionada no Git |
 
 Se a leitura falhar ou o formato salvo for incompatível, o app mostra nova tentativa sem substituir os dados pelo padrão. Se uma gravação falhar, mantém o trabalho na memória e informa que ainda não foi salvo; o botão de nova tentativa grava o valor atual.
 
 O login é único e demonstrativo; os dados acadêmicos pertencem ao espaço local do aparelho. Sair encerra a sessão e remove as consultas de clima, preservando o trabalho cadastrado. Não há sincronização entre celulares nem recuperação após desinstalar o app ou limpar seus dados.
 
-Escolhemos AsyncStorage porque o conjunto de dados e o cache são pequenos. O projeto não possui senha nem token JWT: portanto não há token a colocar em SecureStore. SQLite fica para um volume maior que exija consultas relacionais. Essas ferramentas não foram adicionadas como demonstrações sem uso real.
+O conjunto de dados e o cache são pequenos, por isso usam AsyncStorage. O login demonstrativo não utiliza senha nem token JWT. SecureStore é indicado para credenciais, e SQLite para dados que exijam consultas relacionais.
 
 ### Roteiro de teste no Android
 
@@ -98,7 +98,7 @@ No Expo Go, a conexão com o servidor de desenvolvimento é necessária para car
 
 `.env.local` está ignorado pelo Git; somente o exemplo vazio é versionado. Como as variáveis `EXPO_PUBLIC_` são incluídas no aplicativo, isso não torna a chave um segredo de servidor. Esta integração é para demonstração acadêmica; em uma publicação pública, use um backend para proteger a chave ou as restrições de aplicação oferecidas pelo provedor.
 
-Não há dados meteorológicos simulados no app. Sem chave ou internet, a tela informa a indisponibilidade. As dicas de mochila são regras locais baseadas nos valores retornados pela previsão, não respostas de IA. A consulta usa a cidade digitada, sem permissão de GPS. Os horários e a data da previsão seguem a localidade consultada.
+O clima vem da WeatherAPI. Sem conexão, o app mostra a consulta salva com um aviso; se não houver cache, informa que precisa de internet. As dicas de mochila usam os valores da previsão. A consulta usa a cidade digitada, sem permissão de GPS. Os horários e a data seguem a localidade consultada.
 
 ## Testar no celular com Expo Go
 

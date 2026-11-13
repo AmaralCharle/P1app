@@ -1,13 +1,8 @@
 import type { ThemeColors } from '../../theme';
 import { useTheme } from '../../ThemeContext';
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { Feather } from '@expo/vector-icons';
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { getAverage, getStatus } from '../../dados.js';
 import { useStudents } from '../../StudentsContext';
@@ -69,9 +64,59 @@ export default function Dashboard() {
         </View>
 
         <View style={[ui.grid, { marginBottom: 24 }]}>
-          <View style={ui.column}><Card><Text style={ui.heading}>Explore as disciplinas</Text><Text style={ui.text}>Compare as médias e acompanhe as notas de cada matéria.</Text><Action label="Abrir disciplinas" icon="book-open" secondary onPress={() => router.push('/disciplinas')} /></Card></View>
-          <View style={ui.column}><Card><Text style={ui.heading}>Sua rotina acadêmica</Text><Text style={ui.text}>{events.filter(event => !event.done).length} compromisso(s) pendente(s) na agenda.</Text><Action label="Organizar agenda" icon="calendar" secondary onPress={() => router.push('/agenda')} /><Action label="Ver plano de estudos" icon="target" secondary onPress={() => router.push('/plano-estudos')} /></Card></View>
-          <View style={ui.column}><Card><View style={ui.spread}><Text style={ui.heading}>Antes de sair para a aula</Text><Feather name="sun" color={colors.info} size={24} /></View><Text style={ui.text}>Confira o clima real, a chance de chuva e a previsão por horário na cidade onde você estuda.</Text><Action label="Consultar clima" icon="cloud" secondary onPress={() => router.push('/clima')} /></Card></View>
+          <View style={ui.column}>
+            <Card>
+              <Text style={ui.heading}>Explore as disciplinas</Text>
+              <Text style={ui.text}>
+                Compare as médias e acompanhe as notas de cada matéria.
+              </Text>
+              <Action
+                label="Abrir disciplinas"
+                icon="book-open"
+                secondary
+                onPress={() => router.push('/disciplinas')}
+              />
+            </Card>
+          </View>
+          <View style={ui.column}>
+            <Card>
+              <Text style={ui.heading}>Sua rotina acadêmica</Text>
+              <Text style={ui.text}>
+                {events.filter((event) => !event.done).length} compromisso(s)
+                pendente(s) na agenda.
+              </Text>
+              <Action
+                label="Organizar agenda"
+                icon="calendar"
+                secondary
+                onPress={() => router.push('/agenda')}
+              />
+              <Action
+                label="Ver plano de estudos"
+                icon="target"
+                secondary
+                onPress={() => router.push('/plano-estudos')}
+              />
+            </Card>
+          </View>
+          <View style={ui.column}>
+            <Card>
+              <View style={ui.spread}>
+                <Text style={ui.heading}>Antes de sair para a aula</Text>
+                <Feather name="sun" color={colors.info} size={24} />
+              </View>
+              <Text style={ui.text}>
+                Confira o clima real, a chance de chuva e a previsão por horário
+                na cidade onde você estuda.
+              </Text>
+              <Action
+                label="Consultar clima"
+                icon="cloud"
+                secondary
+                onPress={() => router.push('/clima')}
+              />
+            </Card>
+          </View>
         </View>
         <View style={styles.summaryGrid}>
           <View style={[styles.metricCard, styles.totalCard]}>
@@ -119,9 +164,7 @@ export default function Dashboard() {
         <View style={styles.lowerGrid}>
           <View style={[styles.panel, styles.distributionPanel]}>
             <Text style={styles.panelTitle}>Distribuição de Desempenho</Text>
-            <Text style={styles.panelSubtitle}>
-              Alunos por faixa de média
-            </Text>
+            <Text style={styles.panelSubtitle}>Alunos por faixa de média</Text>
 
             <View style={styles.progressTrack}>
               <View
@@ -152,21 +195,24 @@ export default function Dashboard() {
                 <View style={[styles.legendDot, styles.approvedDot]} />
                 <Text style={styles.legendLabel}>Aprovados</Text>
                 <Text style={styles.legendValue}>
-                  {summary.aprovados} ({getPercentage(summary.aprovados).toFixed(0)}%)
+                  {summary.aprovados} (
+                  {getPercentage(summary.aprovados).toFixed(0)}%)
                 </Text>
               </View>
               <View style={styles.legendItem}>
                 <View style={[styles.legendDot, styles.reviewDot]} />
                 <Text style={styles.legendLabel}>Em revisão</Text>
                 <Text style={styles.legendValue}>
-                  {summary.emRevisao} ({getPercentage(summary.emRevisao).toFixed(0)}%)
+                  {summary.emRevisao} (
+                  {getPercentage(summary.emRevisao).toFixed(0)}%)
                 </Text>
               </View>
               <View style={styles.legendItem}>
                 <View style={[styles.legendDot, styles.attentionDot]} />
                 <Text style={styles.legendLabel}>Atenção</Text>
                 <Text style={styles.legendValue}>
-                  {summary.atencao} ({getPercentage(summary.atencao).toFixed(0)}%)
+                  {summary.atencao} ({getPercentage(summary.atencao).toFixed(0)}
+                  %)
                 </Text>
               </View>
             </View>
@@ -221,249 +267,250 @@ export default function Dashboard() {
   );
 }
 
-const createStyles = (colors: ThemeColors) => StyleSheet.create({
-  screen: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  container: {
-    flexGrow: 1,
-    padding: 24,
-    paddingBottom: 40,
-  },
-  pageHeader: {
-    marginBottom: 32,
-  },
-  pageTitle: {
-    color: colors.text,
-    fontSize: 32,
-    fontWeight: '800',
-    marginBottom: 8,
-  },
-  pageSubtitle: {
-    color: colors.textMuted,
-    fontSize: 15,
-  },
-  summaryGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 16,
-    marginBottom: 32,
-  },
-  metricCard: {
-    flex: 1,
-    minWidth: 220,
-    padding: 20,
-    borderRadius: 16,
-    backgroundColor: colors.backgroundCard,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderTopWidth: 3,
-    shadowColor: '#000000',
-    shadowOpacity: 0.2,
-    shadowRadius: 12,
-    shadowOffset: { width: 0, height: 6 },
-    elevation: 4,
-  },
-  totalCard: {
-    borderTopColor: 'rgba(59,130,246,0.5)',
-  },
-  averageCard: {
-    borderTopColor: 'rgba(6,182,212,0.5)',
-  },
-  approvedCard: {
-    borderTopColor: 'rgba(16,185,129,0.5)',
-  },
-  reviewCard: {
-    borderTopColor: 'rgba(245,158,11,0.5)',
-  },
-  metricHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 20,
-  },
-  metricLabel: {
-    color: colors.textMuted,
-    fontSize: 13,
-    fontWeight: '600',
-  },
-  metricValue: {
-    color: colors.text,
-    fontSize: 32,
-    fontWeight: '800',
-  },
-  averageValueRow: {
-    flexDirection: 'row',
-    alignItems: 'baseline',
-    gap: 8,
-  },
-  averageScale: {
-    color: colors.textMuted,
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  metricCaption: {
-    color: colors.textMuted,
-    fontSize: 12,
-    marginTop: 8,
-  },
-  lowerGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'flex-start',
-    gap: 24,
-  },
-  panel: {
-    padding: 24,
-    borderRadius: 16,
-    backgroundColor: colors.backgroundCard,
-    borderWidth: 1,
-    borderColor: colors.border,
-    shadowColor: '#000000',
-    shadowOpacity: 0.2,
-    shadowRadius: 12,
-    shadowOffset: { width: 0, height: 6 },
-    elevation: 4,
-  },
-  distributionPanel: {
-    flexGrow: 2,
-    flexShrink: 1,
-    flexBasis: 300,
-    minWidth: 0,
-    maxWidth: '100%',
-  },
-  rankingPanel: {
-    flexGrow: 1,
-    flexShrink: 1,
-    flexBasis: 280,
-    minWidth: 0,
-    maxWidth: '100%',
-  },
-  panelTitle: {
-    color: colors.text,
-    fontSize: 18,
-    fontWeight: '700',
-  },
-  panelSubtitle: {
-    color: colors.textMuted,
-    fontSize: 13,
-    marginTop: 6,
-  },
-  progressTrack: {
-    flexDirection: 'row',
-    width: '100%',
-    height: 12,
-    overflow: 'hidden',
-    borderRadius: 999,
-    backgroundColor: colors.border,
-    marginTop: 28,
-    marginBottom: 24,
-  },
-  progressSegment: {
-    height: '100%',
-  },
-  progressApproved: {
-    backgroundColor: '#10B981',
-  },
-  progressReview: {
-    backgroundColor: '#F59E0B',
-  },
-  progressAttention: {
-    backgroundColor: '#EF4444',
-  },
-  legend: {
-    gap: 16,
-  },
-  legendItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-  },
-  legendDot: {
-    width: 9,
-    height: 9,
-    borderRadius: 5,
-  },
-  approvedDot: {
-    backgroundColor: '#10B981',
-  },
-  reviewDot: {
-    backgroundColor: '#F59E0B',
-  },
-  attentionDot: {
-    backgroundColor: '#EF4444',
-  },
-  legendLabel: {
-    color: colors.textSoft,
-    fontSize: 13,
-    flex: 1,
-  },
-  legendValue: {
-    color: colors.text,
-    fontSize: 13,
-    fontWeight: '600',
-  },
-  rankingList: {
-    gap: 12,
-    marginTop: 20,
-  },
-  studentCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    padding: 12,
-    borderRadius: 12,
-    backgroundColor: colors.backgroundSoft,
-    borderWidth: 1,
-    borderColor: colors.border,
-  },
-  rankBadge: {
-    width: 30,
-    height: 30,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 15,
-    backgroundColor: colors.backgroundPill,
-  },
-  rankNumber: {
-    color: colors.info,
-    fontSize: 13,
-    fontWeight: '700',
-  },
-  studentInfo: {
-    flex: 1,
-  },
-  studentName: {
-    color: colors.text,
-    fontSize: 13,
-    fontWeight: '700',
-  },
-  studentCourse: {
-    color: colors.textMuted,
-    fontSize: 11,
-    marginTop: 4,
-  },
-  studentScore: {
-    alignItems: 'flex-end',
-  },
-  averageScore: {
-    color: colors.text,
-    fontSize: 15,
-    fontWeight: '800',
-  },
-  studentStatus: {
-    fontSize: 10,
-    fontWeight: '600',
-    marginTop: 3,
-  },
-  statusApproved: {
-    color: colors.success,
-  },
-  statusReview: {
-    color: colors.warning,
-  },
-  statusAttention: {
-    color: colors.danger,
-  },
-});
+const createStyles = (colors: ThemeColors) =>
+  StyleSheet.create({
+    screen: {
+      flex: 1,
+      backgroundColor: colors.background,
+    },
+    container: {
+      flexGrow: 1,
+      padding: 24,
+      paddingBottom: 40,
+    },
+    pageHeader: {
+      marginBottom: 32,
+    },
+    pageTitle: {
+      color: colors.text,
+      fontSize: 32,
+      fontWeight: '800',
+      marginBottom: 8,
+    },
+    pageSubtitle: {
+      color: colors.textMuted,
+      fontSize: 15,
+    },
+    summaryGrid: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      gap: 16,
+      marginBottom: 32,
+    },
+    metricCard: {
+      flex: 1,
+      minWidth: 220,
+      padding: 20,
+      borderRadius: 16,
+      backgroundColor: colors.backgroundCard,
+      borderWidth: 1,
+      borderColor: colors.border,
+      borderTopWidth: 3,
+      shadowColor: '#000000',
+      shadowOpacity: 0.2,
+      shadowRadius: 12,
+      shadowOffset: { width: 0, height: 6 },
+      elevation: 4,
+    },
+    totalCard: {
+      borderTopColor: 'rgba(59,130,246,0.5)',
+    },
+    averageCard: {
+      borderTopColor: 'rgba(6,182,212,0.5)',
+    },
+    approvedCard: {
+      borderTopColor: 'rgba(16,185,129,0.5)',
+    },
+    reviewCard: {
+      borderTopColor: 'rgba(245,158,11,0.5)',
+    },
+    metricHeader: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      marginBottom: 20,
+    },
+    metricLabel: {
+      color: colors.textMuted,
+      fontSize: 13,
+      fontWeight: '600',
+    },
+    metricValue: {
+      color: colors.text,
+      fontSize: 32,
+      fontWeight: '800',
+    },
+    averageValueRow: {
+      flexDirection: 'row',
+      alignItems: 'baseline',
+      gap: 8,
+    },
+    averageScale: {
+      color: colors.textMuted,
+      fontSize: 14,
+      fontWeight: '600',
+    },
+    metricCaption: {
+      color: colors.textMuted,
+      fontSize: 12,
+      marginTop: 8,
+    },
+    lowerGrid: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      alignItems: 'flex-start',
+      gap: 24,
+    },
+    panel: {
+      padding: 24,
+      borderRadius: 16,
+      backgroundColor: colors.backgroundCard,
+      borderWidth: 1,
+      borderColor: colors.border,
+      shadowColor: '#000000',
+      shadowOpacity: 0.2,
+      shadowRadius: 12,
+      shadowOffset: { width: 0, height: 6 },
+      elevation: 4,
+    },
+    distributionPanel: {
+      flexGrow: 2,
+      flexShrink: 1,
+      flexBasis: 300,
+      minWidth: 0,
+      maxWidth: '100%',
+    },
+    rankingPanel: {
+      flexGrow: 1,
+      flexShrink: 1,
+      flexBasis: 280,
+      minWidth: 0,
+      maxWidth: '100%',
+    },
+    panelTitle: {
+      color: colors.text,
+      fontSize: 18,
+      fontWeight: '700',
+    },
+    panelSubtitle: {
+      color: colors.textMuted,
+      fontSize: 13,
+      marginTop: 6,
+    },
+    progressTrack: {
+      flexDirection: 'row',
+      width: '100%',
+      height: 12,
+      overflow: 'hidden',
+      borderRadius: 999,
+      backgroundColor: colors.border,
+      marginTop: 28,
+      marginBottom: 24,
+    },
+    progressSegment: {
+      height: '100%',
+    },
+    progressApproved: {
+      backgroundColor: '#10B981',
+    },
+    progressReview: {
+      backgroundColor: '#F59E0B',
+    },
+    progressAttention: {
+      backgroundColor: '#EF4444',
+    },
+    legend: {
+      gap: 16,
+    },
+    legendItem: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 10,
+    },
+    legendDot: {
+      width: 9,
+      height: 9,
+      borderRadius: 5,
+    },
+    approvedDot: {
+      backgroundColor: '#10B981',
+    },
+    reviewDot: {
+      backgroundColor: '#F59E0B',
+    },
+    attentionDot: {
+      backgroundColor: '#EF4444',
+    },
+    legendLabel: {
+      color: colors.textSoft,
+      fontSize: 13,
+      flex: 1,
+    },
+    legendValue: {
+      color: colors.text,
+      fontSize: 13,
+      fontWeight: '600',
+    },
+    rankingList: {
+      gap: 12,
+      marginTop: 20,
+    },
+    studentCard: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 12,
+      padding: 12,
+      borderRadius: 12,
+      backgroundColor: colors.backgroundSoft,
+      borderWidth: 1,
+      borderColor: colors.border,
+    },
+    rankBadge: {
+      width: 30,
+      height: 30,
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: 15,
+      backgroundColor: colors.backgroundPill,
+    },
+    rankNumber: {
+      color: colors.info,
+      fontSize: 13,
+      fontWeight: '700',
+    },
+    studentInfo: {
+      flex: 1,
+    },
+    studentName: {
+      color: colors.text,
+      fontSize: 13,
+      fontWeight: '700',
+    },
+    studentCourse: {
+      color: colors.textMuted,
+      fontSize: 11,
+      marginTop: 4,
+    },
+    studentScore: {
+      alignItems: 'flex-end',
+    },
+    averageScore: {
+      color: colors.text,
+      fontSize: 15,
+      fontWeight: '800',
+    },
+    studentStatus: {
+      fontSize: 10,
+      fontWeight: '600',
+      marginTop: 3,
+    },
+    statusApproved: {
+      color: colors.success,
+    },
+    statusReview: {
+      color: colors.warning,
+    },
+    statusAttention: {
+      color: colors.danger,
+    },
+  });

@@ -16,7 +16,13 @@ export type ForecastDay = {
   hour: ForecastHour[];
 };
 export type WeatherForecast = {
-  location: { name: string; region: string; country: string; lat: number; lon: number };
+  location: {
+    name: string;
+    region: string;
+    country: string;
+    lat: number;
+    lon: number;
+  };
   current: {
     temp_c: number;
     feelslike_c: number;

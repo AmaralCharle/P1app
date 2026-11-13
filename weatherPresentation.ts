@@ -8,12 +8,18 @@ export function weatherIcon(description: string) {
 }
 
 export function weatherStudyTip(chanceOfRain: number, maxTemperature: number) {
-  if (chanceOfRain >= 50) return 'Guarda-chuva na mochila: há chance de chuva. Reserve uma folga para chegar à aula.';
-  if (maxTemperature >= 30) return 'Dia quente pela frente. Leve água e planeje seu trajeto até a aula.';
+  if (chanceOfRain >= 50)
+    return 'Guarda-chuva na mochila: há chance de chuva. Reserve uma folga para chegar à aula.';
+  if (maxTemperature >= 30)
+    return 'Dia quente pela frente. Leve água e planeje seu trajeto até a aula.';
   return 'Confira os horários das suas aulas e deixe o material separado antes de sair.';
 }
 
 export function weatherDate(date: string) {
   const [year, month, day] = date.split('-').map(Number);
-  return new Date(year, month - 1, day, 12).toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit', month: '2-digit' });
+  return new Date(year, month - 1, day, 12).toLocaleDateString('pt-BR', {
+    weekday: 'short',
+    day: '2-digit',
+    month: '2-digit',
+  });
 }

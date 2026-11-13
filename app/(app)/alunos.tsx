@@ -37,8 +37,7 @@ export default function Alunos() {
         .toLocaleLowerCase()
         .includes(normalizedSearch);
       const status = getStatus(getAverage(student.notas));
-      const matchesStatus =
-        statusFilter === 'Todos' || status === statusFilter;
+      const matchesStatus = statusFilter === 'Todos' || status === statusFilter;
 
       return matchesSearch && matchesStatus;
     });
@@ -137,7 +136,9 @@ export default function Alunos() {
                     </View>
                     <Text style={styles.studentNotes}>
                       {Object.entries(student.notas)
-                        .map(([subjectName, value]) => `${subjectName}: ${value}`)
+                        .map(
+                          ([subjectName, value]) => `${subjectName}: ${value}`
+                        )
                         .join(' • ')}
                     </Text>
                   </Pressable>
@@ -168,158 +169,159 @@ export default function Alunos() {
   );
 }
 
-const createStyles = (colors: ThemeColors) => StyleSheet.create({
-  screen: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  container: {
-    flex: 1,
-    padding: spacing.card,
-    paddingTop: spacing.md,
-    paddingBottom: spacing.bottom,
-  },
-  title: {
-    color: colors.text,
-    fontSize: 20,
-    fontWeight: '700',
-    marginBottom: spacing.compact,
-  },
-  subtitle: {
-    color: colors.textSoft,
-    fontSize: 13,
-    marginBottom: spacing.input,
-  },
-  input: {
-    backgroundColor: colors.backgroundSoft,
-    borderWidth: 1,
-    borderColor: colors.borderInput,
-    color: colors.text,
-    borderRadius: radius.md,
-    paddingHorizontal: spacing.input,
-    paddingVertical: spacing.mdCompact,
-    marginBottom: spacing.mdCompact,
-    fontSize: 15,
-  },
-  filterChips: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: spacing.sm,
-    marginBottom: spacing.md,
-  },
-  filterChip: {
-    backgroundColor: colors.backgroundPill,
-    borderRadius: radius.full,
-    paddingHorizontal: spacing.mdCompact,
-    paddingVertical: spacing.sm,
-    borderWidth: 1,
-    borderColor: colors.borderInput,
-  },
-  filterChipSelected: {
-    backgroundColor: colors.primaryDark,
-    borderColor: colors.primaryBorder,
-  },
-  filterChipText: {
-    color: colors.textSecondary,
-    fontSize: 12,
-    fontWeight: '600',
-  },
-  filterChipTextSelected: {
-    color: colors.textInverse,
-  },
-  scrollView: {
-    flex: 1,
-  },
-  studentList: {
-    gap: spacing.md,
-    paddingBottom: spacing.md,
-  },
-  studentCard: {
-    backgroundColor: colors.backgroundSoft,
-    borderRadius: radius.lg,
-    padding: spacing.input,
-    borderWidth: 1,
-    borderColor: colors.borderStudent,
-    shadowColor: '#000',
-    shadowOpacity: 0.15,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 4,
-  },
-  studentCardSelected: {
-    borderColor: colors.borderSelected,
-    backgroundColor: colors.backgroundSelected,
-  },
-  studentHeaderRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: spacing.sm,
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: spacing.compact,
-  },
-  studentName: {
-    flexShrink: 1,
-    color: colors.text,
-    fontWeight: '700',
-    fontSize: 18,
-  },
-  statusBadge: {
-    fontSize: 11,
-    fontWeight: '700',
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xs,
-    borderRadius: radius.full,
-    overflow: 'hidden',
-  },
-  statusPassed: {
-    backgroundColor: colors.successBackground,
-    color: colors.success,
-  },
-  statusReview: {
-    backgroundColor: colors.warningBackground,
-    color: colors.warning,
-  },
-  statusWarning: {
-    backgroundColor: colors.dangerBackground,
-    color: colors.danger,
-  },
-  studentCourse: {
-    color: colors.textMuted,
-    fontSize: 13,
-    marginBottom: spacing.sm,
-  },
-  studentMetricsRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: spacing.compact,
-  },
-  metricText: {
-    color: colors.textSecondary,
-    fontSize: 12,
-  },
-  studentNotes: {
-    color: colors.textSoft,
-    fontSize: 12,
-    lineHeight: 18,
-  },
-  notesButton: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: colors.primary,
-    borderRadius: radius.md,
-    paddingVertical: spacing.mdCompact,
-    marginTop: spacing.md,
-  },
-  notesButtonText: {
-    color: colors.textInverse,
-    fontSize: 14,
-    fontWeight: '700',
-  },
-  emptyMessage: {
-    color: colors.textSoft,
-    fontSize: 14,
-    paddingVertical: spacing.md,
-    textAlign: 'center',
-  },
-});
+const createStyles = (colors: ThemeColors) =>
+  StyleSheet.create({
+    screen: {
+      flex: 1,
+      backgroundColor: colors.background,
+    },
+    container: {
+      flex: 1,
+      padding: spacing.card,
+      paddingTop: spacing.md,
+      paddingBottom: spacing.bottom,
+    },
+    title: {
+      color: colors.text,
+      fontSize: 20,
+      fontWeight: '700',
+      marginBottom: spacing.compact,
+    },
+    subtitle: {
+      color: colors.textSoft,
+      fontSize: 13,
+      marginBottom: spacing.input,
+    },
+    input: {
+      backgroundColor: colors.backgroundSoft,
+      borderWidth: 1,
+      borderColor: colors.borderInput,
+      color: colors.text,
+      borderRadius: radius.md,
+      paddingHorizontal: spacing.input,
+      paddingVertical: spacing.mdCompact,
+      marginBottom: spacing.mdCompact,
+      fontSize: 15,
+    },
+    filterChips: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      gap: spacing.sm,
+      marginBottom: spacing.md,
+    },
+    filterChip: {
+      backgroundColor: colors.backgroundPill,
+      borderRadius: radius.full,
+      paddingHorizontal: spacing.mdCompact,
+      paddingVertical: spacing.sm,
+      borderWidth: 1,
+      borderColor: colors.borderInput,
+    },
+    filterChipSelected: {
+      backgroundColor: colors.primaryDark,
+      borderColor: colors.primaryBorder,
+    },
+    filterChipText: {
+      color: colors.textSecondary,
+      fontSize: 12,
+      fontWeight: '600',
+    },
+    filterChipTextSelected: {
+      color: colors.textInverse,
+    },
+    scrollView: {
+      flex: 1,
+    },
+    studentList: {
+      gap: spacing.md,
+      paddingBottom: spacing.md,
+    },
+    studentCard: {
+      backgroundColor: colors.backgroundSoft,
+      borderRadius: radius.lg,
+      padding: spacing.input,
+      borderWidth: 1,
+      borderColor: colors.borderStudent,
+      shadowColor: '#000',
+      shadowOpacity: 0.15,
+      shadowRadius: 8,
+      shadowOffset: { width: 0, height: 4 },
+      elevation: 4,
+    },
+    studentCardSelected: {
+      borderColor: colors.borderSelected,
+      backgroundColor: colors.backgroundSelected,
+    },
+    studentHeaderRow: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      gap: spacing.sm,
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: spacing.compact,
+    },
+    studentName: {
+      flexShrink: 1,
+      color: colors.text,
+      fontWeight: '700',
+      fontSize: 18,
+    },
+    statusBadge: {
+      fontSize: 11,
+      fontWeight: '700',
+      paddingHorizontal: spacing.sm,
+      paddingVertical: spacing.xs,
+      borderRadius: radius.full,
+      overflow: 'hidden',
+    },
+    statusPassed: {
+      backgroundColor: colors.successBackground,
+      color: colors.success,
+    },
+    statusReview: {
+      backgroundColor: colors.warningBackground,
+      color: colors.warning,
+    },
+    statusWarning: {
+      backgroundColor: colors.dangerBackground,
+      color: colors.danger,
+    },
+    studentCourse: {
+      color: colors.textMuted,
+      fontSize: 13,
+      marginBottom: spacing.sm,
+    },
+    studentMetricsRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginBottom: spacing.compact,
+    },
+    metricText: {
+      color: colors.textSecondary,
+      fontSize: 12,
+    },
+    studentNotes: {
+      color: colors.textSoft,
+      fontSize: 12,
+      lineHeight: 18,
+    },
+    notesButton: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: colors.primary,
+      borderRadius: radius.md,
+      paddingVertical: spacing.mdCompact,
+      marginTop: spacing.md,
+    },
+    notesButtonText: {
+      color: colors.textInverse,
+      fontSize: 14,
+      fontWeight: '700',
+    },
+    emptyMessage: {
+      color: colors.textSoft,
+      fontSize: 14,
+      paddingVertical: spacing.md,
+      textAlign: 'center',
+    },
+  });

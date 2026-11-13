@@ -1,3 +1,4 @@
+import { ScreenShell } from '../../components/ScreenShell';
 import type { ThemeColors } from '../../theme';
 import { useTheme } from '../../ThemeContext';
 import { useState } from 'react';
@@ -9,35 +10,12 @@ import {
   StyleSheet,
   Text,
   TextInput,
-  View,
   useColorScheme,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { radius, spacing } from '../../theme';
 import { useStudents } from '../../StudentsContext';
-
-function ScreenShell({
-  title,
-  subtitle,
-  children,
-}: {
-  title: string;
-  subtitle: string;
-  children: React.ReactNode;
-}) {
-  const { colors } = useTheme();
-  const styles = createStyles(colors);
-  return (
-    <View style={styles.card}>
-      <Text style={[styles.titulo, styles.sectionTitle]}>{title}</Text>
-      {subtitle ? (
-        <Text style={[styles.subtitulo, styles.subtitleText]}>{subtitle}</Text>
-      ) : null}
-      {children}
-    </View>
-  );
-}
 
 export default function NovoAluno() {
   const { colors } = useTheme();
@@ -56,11 +34,17 @@ export default function NovoAluno() {
   };
 
   return (
-    <SafeAreaView edges={[]}
+    <SafeAreaView
+      edges={[]}
       style={[styles.screen, colorScheme === 'dark' && styles.darkScreen]}
     >
-      <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled" keyboardDismissMode="on-drag">
+      <ScrollView
+        contentContainerStyle={styles.container}
+        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="on-drag"
+      >
         <ScreenShell
+          styles={styles}
           title="Adicionar aluno"
           subtitle="Cadastre um novo estudante no sistema"
         >
@@ -87,80 +71,81 @@ export default function NovoAluno() {
   );
 }
 
-const createStyles = (colors: ThemeColors) => StyleSheet.create({
-  screen: {
-    flex: 1,
-    backgroundColor: colors.backgroundCard,
-  },
-  darkScreen: {
-    backgroundColor: colors.background,
-  },
-  container: {
-    padding: spacing.card,
-    paddingTop: Platform.select({ ios: 20, android: 8 }),
-    paddingBottom: spacing.bottom,
-  },
-  card: {
-    flex: 1,
-    backgroundColor: colors.backgroundCard,
-    borderRadius: radius.xl,
-    padding: spacing.card,
-    marginBottom: spacing.card,
-    borderWidth: 1,
-    borderColor: colors.border,
-    shadowColor: '#000',
-    shadowOpacity: 0.15,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 4,
-  },
-  titulo: {
-    fontSize: 20,
-    fontWeight: '700',
-    color: colors.text,
-  },
-  subtitulo: {
-    fontSize: 15,
-    fontWeight: '400',
-    color: colors.textSoft,
-  },
-  textoBase: {
-    fontSize: 14,
-    fontWeight: '400',
-    color: colors.textSecondary,
-  },
-  sectionTitle: {
-    color: colors.text,
-    fontSize: 20,
-    fontWeight: '700',
-    marginBottom: spacing.compact,
-  },
-  subtitleText: {
-    color: colors.textSoft,
-    fontSize: 13,
-    marginBottom: spacing.input,
-  },
-  input: {
-    backgroundColor: colors.backgroundSoft,
-    borderWidth: 1,
-    borderColor: colors.borderInput,
-    color: colors.text,
-    borderRadius: radius.md,
-    paddingHorizontal: spacing.input,
-    paddingVertical: spacing.mdCompact,
-    marginBottom: spacing.mdCompact,
-    fontSize: 15,
-  },
-  primaryButton: {
-    backgroundColor: colors.primary,
-    borderRadius: radius.md,
-    paddingVertical: spacing.mdCompact,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  primaryButtonText: {
-    color: colors.textInverse,
-    fontWeight: '700',
-    fontSize: 15,
-  },
-});
+const createStyles = (colors: ThemeColors) =>
+  StyleSheet.create({
+    screen: {
+      flex: 1,
+      backgroundColor: colors.backgroundCard,
+    },
+    darkScreen: {
+      backgroundColor: colors.background,
+    },
+    container: {
+      padding: spacing.card,
+      paddingTop: Platform.select({ ios: 20, android: 8 }),
+      paddingBottom: spacing.bottom,
+    },
+    card: {
+      flex: 1,
+      backgroundColor: colors.backgroundCard,
+      borderRadius: radius.xl,
+      padding: spacing.card,
+      marginBottom: spacing.card,
+      borderWidth: 1,
+      borderColor: colors.border,
+      shadowColor: '#000',
+      shadowOpacity: 0.15,
+      shadowRadius: 8,
+      shadowOffset: { width: 0, height: 4 },
+      elevation: 4,
+    },
+    titulo: {
+      fontSize: 20,
+      fontWeight: '700',
+      color: colors.text,
+    },
+    subtitulo: {
+      fontSize: 15,
+      fontWeight: '400',
+      color: colors.textSoft,
+    },
+    textoBase: {
+      fontSize: 14,
+      fontWeight: '400',
+      color: colors.textSecondary,
+    },
+    sectionTitle: {
+      color: colors.text,
+      fontSize: 20,
+      fontWeight: '700',
+      marginBottom: spacing.compact,
+    },
+    subtitleText: {
+      color: colors.textSoft,
+      fontSize: 13,
+      marginBottom: spacing.input,
+    },
+    input: {
+      backgroundColor: colors.backgroundSoft,
+      borderWidth: 1,
+      borderColor: colors.borderInput,
+      color: colors.text,
+      borderRadius: radius.md,
+      paddingHorizontal: spacing.input,
+      paddingVertical: spacing.mdCompact,
+      marginBottom: spacing.mdCompact,
+      fontSize: 15,
+    },
+    primaryButton: {
+      backgroundColor: colors.primary,
+      borderRadius: radius.md,
+      paddingVertical: spacing.mdCompact,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    primaryButtonText: {
+      color: colors.textInverse,
+      fontWeight: '700',
+      fontSize: 15,
+    },
+  });

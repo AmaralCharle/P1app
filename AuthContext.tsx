@@ -22,16 +22,31 @@ type AuthContextValue = {
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
 export function AuthProvider({ children }: PropsWithChildren) {
-  const persisted = usePersistedState<string | null>(storageKeys.session, null, isSession, { removeWhen: value => value === null });
+  const persisted = usePersistedState<string | null>(
+    storageKeys.session,
+    null,
+    isSession,
+    { removeWhen: (value) => value === null }
+  );
   const [clearing, setClearing] = useState(false);
   const [cleanupError, setCleanupError] = useState<string | null>(null);
   const usuario = persisted.value;
-  const entrar = () => clearing ? Promise.resolve(false) : persisted.update('Admin');
+  const entrar = () =>
+    clearing ? Promise.resolve(false) : persisted.update('Admin');
   async function clearCache() {
     setClearing(true);
-    try { await clearWeatherCache(); setCleanupError(null); return true; }
-    catch { setCleanupError('Você saiu da conta, mas não foi possível limpar as consultas de clima salvas. Tente novamente.'); return false; }
-    finally { setClearing(false); }
+    try {
+      await clearWeatherCache();
+      setCleanupError(null);
+      return true;
+    } catch {
+      setCleanupError(
+        'Você saiu da conta, mas não foi possível limpar as consultas de clima salvas. Tente novamente.'
+      );
+      return false;
+    } finally {
+      setClearing(false);
+    }
   }
   async function sair() {
     if (clearing) return false;
@@ -39,10 +54,20 @@ export function AuthProvider({ children }: PropsWithChildren) {
     if (saved) return clearCache();
     return false;
   }
-  const retry = () => cleanupError ? clearCache() : persisted.retry();
+  const retry = () => (cleanupError ? clearCache() : persisted.retry());
 
   return (
-    <AuthContext.Provider value={{ usuario, entrar, sair, ready: persisted.ready, error: persisted.error ?? cleanupError, saving: persisted.saving || clearing, retry }}>
+    <AuthContext.Provider
+      value={{
+        usuario,
+        entrar,
+        sair,
+        ready: persisted.ready,
+        error: persisted.error ?? cleanupError,
+        saving: persisted.saving || clearing,
+        retry,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

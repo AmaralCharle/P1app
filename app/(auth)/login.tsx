@@ -23,56 +23,61 @@ export default function Login() {
           accessibilityRole="button"
           style={styles.button}
           disabled={saving}
-          onPress={() => { void entrar(); }}
+          onPress={() => {
+            void entrar();
+          }}
         >
-          <Text style={styles.buttonText}>{saving ? 'Salvando sessão...' : 'Entrar no Academy Notes'}</Text>
+          <Text style={styles.buttonText}>
+            {saving ? 'Salvando sessão...' : 'Entrar no Academy Notes'}
+          </Text>
         </Pressable>
       </View>
     </SafeAreaView>
   );
 }
 
-const createStyles = (colors: ThemeColors) => StyleSheet.create({
-  screen: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: colors.background,
-    padding: 20,
-  },
-  card: {
-    width: '100%',
-    maxWidth: 400,
-    backgroundColor: colors.backgroundCard,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: 24,
-    padding: 40,
-    alignItems: 'center',
-  },
-  title: {
-    color: colors.text,
-    fontSize: 32,
-    fontWeight: 'bold',
-    marginBottom: 8,
-    textAlign: 'center',
-  },
-  subtitle: {
-    color: colors.textSoft,
-    fontSize: 16,
-    marginBottom: 32,
-    textAlign: 'center',
-  },
-  button: {
-    width: '100%',
-    alignItems: 'center',
-    backgroundColor: colors.primary,
-    paddingVertical: 16,
-    borderRadius: 12,
-  },
-  buttonText: {
-    color: colors.textInverse,
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-});
+const createStyles = (colors: ThemeColors) =>
+  StyleSheet.create({
+    screen: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: colors.background,
+      padding: 20,
+    },
+    card: {
+      width: '100%',
+      maxWidth: 400,
+      backgroundColor: colors.backgroundCard,
+      borderWidth: 1,
+      borderColor: colors.border,
+      borderRadius: 24,
+      padding: 40,
+      alignItems: 'center',
+    },
+    title: {
+      color: colors.text,
+      fontSize: 32,
+      fontWeight: 'bold',
+      marginBottom: 8,
+      textAlign: 'center',
+    },
+    subtitle: {
+      color: colors.textSoft,
+      fontSize: 16,
+      marginBottom: 32,
+      textAlign: 'center',
+    },
+    button: {
+      width: '100%',
+      alignItems: 'center',
+      backgroundColor: colors.primary,
+      paddingVertical: 16,
+      borderRadius: 12,
+    },
+    buttonText: {
+      color: colors.textInverse,
+      fontSize: 16,
+      fontWeight: 'bold',
+    },
+  });

@@ -1,8 +1,4 @@
-import {
-  createContext,
-  useContext,
-  type PropsWithChildren,
-} from 'react';
+import { createContext, useContext, type PropsWithChildren } from 'react';
 import { initialStudents } from './dados.js';
 import { usePersistedState } from './hooks/usePersistedState';
 import { storageKeys } from './services/storage';
@@ -27,13 +23,17 @@ const StudentsContext = createContext<StudentsContextValue | undefined>(
 );
 
 export function StudentsProvider({ children }: PropsWithChildren) {
-  const persisted = usePersistedState<Student[]>(storageKeys.students, initialStudents, isStudentList);
+  const persisted = usePersistedState<Student[]>(
+    storageKeys.students,
+    initialStudents,
+    isStudentList
+  );
   const students = persisted.value;
   const setStudents = persisted.update;
 
   const addStudent = (name: string) => {
     const student: Student = {
-      id: Math.max(Date.now(), ...students.map(item => item.id + 1)),
+      id: Math.max(Date.now(), ...students.map((item) => item.id + 1)),
       name: name.trim(),
       curso: 'Novo curso',
       notas: {
@@ -48,7 +48,8 @@ export function StudentsProvider({ children }: PropsWithChildren) {
   };
 
   const updateGrade = (studentId: number, subject: string, grade: number) => {
-    if (!subject.trim() || !Number.isFinite(grade) || grade < 0 || grade > 10) return;
+    if (!subject.trim() || !Number.isFinite(grade) || grade < 0 || grade > 10)
+      return;
     setStudents((current) =>
       current.map((student) =>
         student.id === studentId
@@ -65,9 +66,16 @@ export function StudentsProvider({ children }: PropsWithChildren) {
   };
 
   return (
-    <PersistenceGate ready={persisted.ready} error={persisted.error} saving={persisted.saving} retry={persisted.retry}><StudentsContext.Provider value={{ students, addStudent, updateGrade }}>
-      {children}
-    </StudentsContext.Provider></PersistenceGate>
+    <PersistenceGate
+      ready={persisted.ready}
+      error={persisted.error}
+      saving={persisted.saving}
+      retry={persisted.retry}
+    >
+      <StudentsContext.Provider value={{ students, addStudent, updateGrade }}>
+        {children}
+      </StudentsContext.Provider>
+    </PersistenceGate>
   );
 }
 

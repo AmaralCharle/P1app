@@ -1,6 +1,7 @@
+import { ScreenShell } from '../../components/ScreenShell';
 import type { ThemeColors } from '../../theme';
 import { useTheme } from '../../ThemeContext';
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import {
   Platform,
   ScrollView,
@@ -13,26 +14,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { radius, spacing } from '../../theme';
 import { getAverage } from '../../dados.js';
 import { useStudents } from '../../StudentsContext';
-
-type ScreenShellProps = {
-  title: string;
-  subtitle: string;
-  children: React.ReactNode;
-};
-
-function ScreenShell({ title, subtitle, children }: ScreenShellProps) {
-  const { colors } = useTheme();
-  const styles = createStyles(colors);
-  return (
-    <View style={styles.card}>
-      <Text style={[styles.titulo, styles.sectionTitle]}>{title}</Text>
-      {subtitle ? (
-        <Text style={[styles.subtitulo, styles.subtitleText]}>{subtitle}</Text>
-      ) : null}
-      {children}
-    </View>
-  );
-}
 
 export default function Relatorios() {
   const { colors } = useTheme();
@@ -56,11 +37,13 @@ export default function Relatorios() {
   }, [students]);
 
   return (
-    <SafeAreaView edges={[]}
+    <SafeAreaView
+      edges={[]}
       style={[styles.screen, colorScheme === 'dark' && styles.darkScreen]}
     >
       <ScrollView contentContainerStyle={styles.container}>
         <ScreenShell
+          styles={styles}
           title="Relatórios"
           subtitle="Resumo de desempenho por categoria"
         >
@@ -110,82 +93,83 @@ export default function Relatorios() {
   );
 }
 
-const createStyles = (colors: ThemeColors) => StyleSheet.create({
-  titulo: {
-    fontSize: 20,
-    fontWeight: '700',
-    color: colors.text,
-  },
-  subtitulo: {
-    fontSize: 15,
-    fontWeight: '400',
-    color: colors.textSoft,
-  },
-  textoBase: {
-    fontSize: 14,
-    fontWeight: '400',
-    color: colors.textSecondary,
-  },
-  screen: {
-    flex: 1,
-    backgroundColor: colors.backgroundCard,
-  },
-  darkScreen: {
-    backgroundColor: colors.background,
-  },
-  container: {
-    padding: spacing.card,
-    paddingTop: Platform.select({ ios: 20, android: 8 }),
-    paddingBottom: spacing.bottom,
-  },
-  card: {
-    flex: 1,
-    backgroundColor: colors.backgroundCard,
-    borderRadius: radius.xl,
-    padding: spacing.card,
-    marginBottom: spacing.card,
-    borderWidth: 1,
-    borderColor: colors.border,
-    shadowColor: '#000',
-    shadowOpacity: 0.15,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 4,
-  },
-  sectionTitle: {
-    color: colors.text,
-    fontSize: 20,
-    fontWeight: '700',
-    marginBottom: spacing.compact,
-  },
-  subtitleText: {
-    color: colors.textSoft,
-    fontSize: 13,
-    marginBottom: spacing.input,
-  },
-  reportList: {
-    gap: spacing.control,
-  },
-  reportItem: {
-    backgroundColor: colors.backgroundSoft,
-    borderRadius: radius.md,
-    padding: spacing.mdCompact,
-    borderWidth: 1,
-    borderColor: colors.border,
-    shadowColor: '#000',
-    shadowOpacity: 0.15,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 4,
-  },
-  reportTitle: {
-    color: colors.textMuted,
-    fontSize: 12,
-    marginBottom: spacing.xs,
-  },
-  reportValue: {
-    color: colors.text,
-    fontSize: 22,
-    fontWeight: '800',
-  },
-});
+const createStyles = (colors: ThemeColors) =>
+  StyleSheet.create({
+    titulo: {
+      fontSize: 20,
+      fontWeight: '700',
+      color: colors.text,
+    },
+    subtitulo: {
+      fontSize: 15,
+      fontWeight: '400',
+      color: colors.textSoft,
+    },
+    textoBase: {
+      fontSize: 14,
+      fontWeight: '400',
+      color: colors.textSecondary,
+    },
+    screen: {
+      flex: 1,
+      backgroundColor: colors.backgroundCard,
+    },
+    darkScreen: {
+      backgroundColor: colors.background,
+    },
+    container: {
+      padding: spacing.card,
+      paddingTop: Platform.select({ ios: 20, android: 8 }),
+      paddingBottom: spacing.bottom,
+    },
+    card: {
+      flex: 1,
+      backgroundColor: colors.backgroundCard,
+      borderRadius: radius.xl,
+      padding: spacing.card,
+      marginBottom: spacing.card,
+      borderWidth: 1,
+      borderColor: colors.border,
+      shadowColor: '#000',
+      shadowOpacity: 0.15,
+      shadowRadius: 8,
+      shadowOffset: { width: 0, height: 4 },
+      elevation: 4,
+    },
+    sectionTitle: {
+      color: colors.text,
+      fontSize: 20,
+      fontWeight: '700',
+      marginBottom: spacing.compact,
+    },
+    subtitleText: {
+      color: colors.textSoft,
+      fontSize: 13,
+      marginBottom: spacing.input,
+    },
+    reportList: {
+      gap: spacing.control,
+    },
+    reportItem: {
+      backgroundColor: colors.backgroundSoft,
+      borderRadius: radius.md,
+      padding: spacing.mdCompact,
+      borderWidth: 1,
+      borderColor: colors.border,
+      shadowColor: '#000',
+      shadowOpacity: 0.15,
+      shadowRadius: 8,
+      shadowOffset: { width: 0, height: 4 },
+      elevation: 4,
+    },
+    reportTitle: {
+      color: colors.textMuted,
+      fontSize: 12,
+      marginBottom: spacing.xs,
+    },
+    reportValue: {
+      color: colors.text,
+      fontSize: 22,
+      fontWeight: '800',
+    },
+  });
