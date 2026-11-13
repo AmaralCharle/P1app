@@ -6,6 +6,16 @@ import { StyleSheet, Text, View } from 'react-native';
 import type { WeatherForecast } from '../types/weather';
 import { Card, useAcademicStyles } from './AcademicUI';
 import { weatherIcon, weatherStudyTip } from '../weatherPresentation';
+import type { CachedResult } from '../services/core/cachedResource';
+
+export function WeatherCacheNotice({ cache, loading }: { cache: Omit<CachedResult<WeatherForecast>, 'data'> | null; loading: boolean }) {
+  const ui = useAcademicStyles();
+  if (!cache || (cache.source === 'network' && !cache.warning)) return null;
+  return <Card><Text style={ui.heading}>{cache.offline ? 'Sem conexão · consulta salva' : cache.source === 'cache' ? 'Consulta salva neste aparelho' : 'Consulta online'}</Text>
+    <Text style={ui.muted}>Salva em {new Date(cache.savedAt).toLocaleString('pt-BR')}</Text>
+    {cache.warning ? <Text accessibilityLiveRegion="polite" style={ui.text}>{cache.warning}</Text> : <Text style={ui.text}>{loading ? 'Buscando uma atualização...' : 'Consulta recente. Toque em atualizar para buscar o clima novamente.'}</Text>}
+  </Card>;
+}
 
 export function WeatherHero({ weather }: { weather: WeatherForecast }) {
   const { colors } = useTheme();

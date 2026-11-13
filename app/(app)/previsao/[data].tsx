@@ -1,12 +1,10 @@
 import { useTheme } from '../../../ThemeContext';
-import { useCallback } from 'react';
 import { ActivityIndicator, FlatList, Text, View, useWindowDimensions } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Feather } from '@expo/vector-icons';
-import { fetchWeather } from '../../../services/weather';
-import { useRemoteData } from '../../../hooks/useRemoteData';
+import { useWeather } from '../../../hooks/useWeather';
 import { Action, Card, useAcademicStyles } from '../../../components/AcademicUI';
-import { WeatherAttribution, WeatherTip, useWeatherStyles } from '../../../components/WeatherUI';
+import { WeatherAttribution, WeatherCacheNotice, WeatherTip, useWeatherStyles } from '../../../components/WeatherUI';
 import { weatherDate, weatherIcon } from '../../../weatherPresentation';
 
 export default function Previsao() {
@@ -16,11 +14,7 @@ export default function Previsao() {
   const { data: date, cidade: city } = useLocalSearchParams<{ data: string; cidade: string }>();
   const router = useRouter();
   const { width } = useWindowDimensions();
-  const load = useCallback((signal: AbortSignal) => {
-    if (typeof city !== 'string' || typeof date !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(date)) return Promise.reject(new Error('Selecione um dia na tela de clima.'));
-    return fetchWeather(city, signal);
-  }, [city, date]);
-  const { data, loading, error, reload } = useRemoteData(load);
+  const { data, loading, error, reload, cache } = useWeather(typeof city === 'string' ? city : '');
   const day = data?.forecast.forecastday.find(item => item.date === date);
   return <FlatList style={ui.screen} contentContainerStyle={[ui.container, width < 600 && { padding: 16 }]}
     data={error ? [] : day?.hour ?? []} keyExtractor={item => item.time}
@@ -29,6 +23,7 @@ export default function Previsao() {
       <Text style={ui.eyebrow}>ACADEMY NOTES / SEU TRAJETO</Text><Text style={ui.title}>Previsão por horário</Text>
       <Action label="Voltar ao clima" icon="arrow-left" secondary onPress={() => router.replace({ pathname: '/clima', params: { cidade: typeof city === 'string' ? city : '' } })} />
       {!!day && !!data && !error && <>
+        <WeatherCacheNotice cache={cache} loading={loading} />
         <Card><View style={ui.spread}><Text style={ui.heading}>{weatherDate(day.date)}</Text><Feather name={weatherIcon(day.day.condition.text)} size={32} color={colors.info} /></View><Text style={ui.text}>{data.location.name} · {data.location.region}</Text><Text style={weatherStyles.range}>{Math.round(day.day.maxtemp_c)}° / {Math.round(day.day.mintemp_c)}°</Text><Text style={ui.text}>{day.day.condition.text}</Text><Text style={ui.badge}>{day.day.daily_chance_of_rain}% de chance de chuva</Text></Card>
         <WeatherTip chanceOfRain={day.day.daily_chance_of_rain} maxTemperature={day.day.maxtemp_c} />
         <Text style={ui.heading}>Planeje o horário de saída</Text><Text style={ui.muted}>Horários locais de {data.location.name}. Atualize para consultar uma previsão mais recente.</Text>

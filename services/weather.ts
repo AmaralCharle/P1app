@@ -16,7 +16,7 @@ function numbers(value: Record<string, unknown>, keys: string[]) {
 function condition(value: unknown) {
   return isRecord(value) && typeof value.text === 'string' && typeof value.code === 'number';
 }
-function isForecast(value: unknown): value is WeatherForecast {
+export function isWeatherForecast(value: unknown): value is WeatherForecast {
   if (!isRecord(value) || !isRecord(value.location) || !isRecord(value.current) || !isRecord(value.forecast)) return false;
   const { location, current, forecast } = value;
   return ['name', 'region', 'country'].every(key => typeof location[key] === 'string')
@@ -56,7 +56,7 @@ export async function fetchWeather(city: string, signal?: AbortSignal): Promise<
       if (code === 2008 || code === 2009) throw new Error('A conta do serviço de clima não tem acesso a esta consulta.');
       throw new Error(`O serviço de clima está indisponível (HTTP ${response.status}). Tente novamente.`);
     }
-    if (!isForecast(data)) throw new Error('O serviço enviou dados de clima em um formato inesperado.');
+    if (!isWeatherForecast(data)) throw new Error('O serviço enviou dados de clima em um formato inesperado.');
     return data;
   } catch (error) {
     if (signal?.aborted) throw error;

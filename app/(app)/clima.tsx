@@ -1,12 +1,12 @@
 import { useTheme } from '../../ThemeContext';
-import { useCallback, useEffect, useState, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { ActivityIndicator, FlatList, Keyboard, KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, TextInput, View, useWindowDimensions } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { fetchWeather, hasWeatherApiKey } from '../../services/weather';
-import { useRemoteData } from '../../hooks/useRemoteData';
+import { hasWeatherApiKey } from '../../services/weather';
+import { useWeather } from '../../hooks/useWeather';
 import { Action, Card, useAcademicStyles } from '../../components/AcademicUI';
-import { WeatherAttribution, WeatherHero, WeatherTip, useWeatherStyles } from '../../components/WeatherUI';
+import { WeatherAttribution, WeatherCacheNotice, WeatherHero, WeatherTip, useWeatherStyles } from '../../components/WeatherUI';
 import { weatherDate, weatherIcon } from '../../weatherPresentation';
 
 function ForecastResults({ city, header }: { city: string; header: ReactNode }) {
@@ -14,8 +14,7 @@ function ForecastResults({ city, header }: { city: string; header: ReactNode }) 
   const ui = useAcademicStyles();
   const weatherStyles = useWeatherStyles();
   const router = useRouter();
-  const load = useCallback((signal: AbortSignal) => fetchWeather(city, signal), [city]);
-  const { data, loading, error, reload } = useRemoteData(load);
+  const { data, loading, error, reload, cache } = useWeather(city);
   useEffect(() => { if (data && !error) setLastCity(city); }, [data, error, city, setLastCity]);
   const { width } = useWindowDimensions();
   const days = data?.forecast.forecastday ?? [];
@@ -24,6 +23,7 @@ function ForecastResults({ city, header }: { city: string; header: ReactNode }) 
     refreshing={loading && !!data} onRefresh={() => { void reload(); }}
     ListHeaderComponent={<View style={{ gap: 16 }}>{header}
       {data && !error && <>
+        <WeatherCacheNotice cache={cache} loading={loading} />
         <WeatherHero weather={data} />
         {!!days.length && <WeatherTip chanceOfRain={days[0].day.daily_chance_of_rain} maxTemperature={days[0].day.maxtemp_c} />}
         <View style={ui.spread}><Text style={ui.heading}>Próximos dias</Text><Text style={ui.badge}>Previsão de até 3 dias</Text></View>
