@@ -43,6 +43,7 @@ export function StudentsProvider({ children }: PropsWithChildren) {
   };
 
   const updateGrade = (studentId: number, subject: string, grade: number) => {
+    if (!subject.trim() || !Number.isFinite(grade) || grade < 0 || grade > 10) return;
     setStudents((current) =>
       current.map((student) =>
         student.id === studentId

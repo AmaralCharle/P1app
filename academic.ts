@@ -30,3 +30,10 @@ export function getStudyPlan(grades: Record<string, number>) {
     guidance: grade < 5 ? 'Retome os conceitos básicos e resolva exercícios com correção.' : grade < 7 ? 'Revise os pontos de dúvida e refaça as questões que errou.' : 'Faça uma revisão breve e pratique para manter o desempenho.',
   }));
 }
+
+export function parseGrade(value: string): number | null {
+  const normalized = value.trim().replace(',', '.');
+  if (!/^\d+(\.\d+)?$/.test(normalized)) return null;
+  const grade = Number(normalized);
+  return Number.isFinite(grade) && grade >= 0 && grade <= 10 ? grade : null;
+}

@@ -17,6 +17,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, radius, spacing } from '../../../theme';
 import { initialStudents } from '../../../dados.js';
 import { useStudents } from '../../../StudentsContext';
+import { parseGrade } from '../../../academic';
 
 export default function LancarNotas() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -31,9 +32,9 @@ export default function LancarNotas() {
   const [error, setError] = useState('');
 
   const saveGrade = () => {
-    const gradeValue = Number(grade);
-    if (!subject.trim() || !grade.trim() || !Number.isFinite(gradeValue)) {
-      setError('Informe uma disciplina e uma nota válida.');
+    const gradeValue = parseGrade(grade);
+    if (!subject.trim() || gradeValue === null) {
+      setError('Informe uma disciplina e uma nota de 0 a 10 (ex.: 8,5).');
       return;
     }
 
