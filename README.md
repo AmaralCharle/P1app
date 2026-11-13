@@ -13,7 +13,7 @@ npm start
 
 Abra pelo Expo Go compatível com o SDK do projeto ou use `npm run web` no navegador. O login atual é demonstrativo: o botão de entrada abre uma sessão local, sem senha nem servidor de autenticação.
 
-## 12 telas navegáveis
+## 14 telas navegáveis
 
 | Tela | Rota | Funcionalidade |
 | --- | --- | --- |
@@ -29,6 +29,8 @@ Abra pelo Expo Go compatível com o SDK do projeto ou use `npm run web` no naveg
 | Detalhe da disciplina | `/disciplina/[nome]` | Notas dos alunos e acesso à edição |
 | Agenda acadêmica | `/agenda` | Cadastro, filtros, conclusão e exclusão com confirmação |
 | Plano de estudos | `/plano-estudos` | Revisão por aluno, prioridades, tempo e progresso |
+| Contatos | `/contatos` | API com FlatList, busca, atualização e estados de tela |
+| Detalhe do contato | `/contato/[id]` | Consulta individual pelo id da API |
 
 Os arquivos `_layout.tsx` são layouts de navegação e não entram na contagem. As rotas dinâmicas contam como uma tela cada, independentemente da quantidade de alunos ou matérias.
 
@@ -42,9 +44,9 @@ Os arquivos `_layout.tsx` são layouts de navegação e não entram na contagem.
 
 ## Situação das aulas 9 e 10
 
-Esta etapa completa primeiro o mínimo de telas. As integrações das duas aulas ainda estão pendentes:
+O mínimo de telas está completo. A integração da aula 9 está implementada; a aula 10 continua pendente:
 
-- **Aula 9 — API:** ainda não há serviço HTTP, lista remota nem cache de API. Uma opção direta ao exercício da aula é um diretório de contatos de demonstração com `GET https://jsonplaceholder.typicode.com/users`, lista com `FlatList`, detalhe por `id`, atualização, carregamento, erro e estado vazio. São pessoas fictícias, não alunos reais da instituição. A API não exige chave: <https://jsonplaceholder.typicode.com/>.
+- **Aula 9 — API implementada:** diretório de contatos de demonstração com `GET https://jsonplaceholder.typicode.com/users`, `FlatList`, detalhe consultado em `/users/:id`, busca, atualização por botão e pull-to-refresh, carregamento, erro com nova tentativa e estado vazio. O serviço usa HTTPS, valida resposta e status HTTP, cancela chamadas ao sair da tela e limita a espera a 12 segundos. São pessoas fictícias, não alunos reais da instituição. Não é preciso cadastro, chave ou download: <https://jsonplaceholder.typicode.com/>. O serviço é somente de demonstração e alterações enviadas por POST não seriam persistidas no servidor.
 - **Aula 10 — persistência:** `useState` e Context mantêm dados apenas em memória. Ainda não há AsyncStorage, SecureStore ou SQLite. Próxima etapa: persistir alunos/notas/agenda/progresso, hidratar antes de renderizar e tratar falhas de leitura e gravação. Cache da API deve informar quando está usando dados locais. Uma sessão demonstrativa persistente não equivale a autenticação real.
 
 ## Verificações
@@ -55,4 +57,18 @@ npm run typecheck
 npx expo export --platform web
 ```
 
-Os testes cobrem médias por disciplina, turma vazia, datas inválidas e bissextas, limites de nota, busca sem acentos e prioridades do plano. A exportação verifica a compilação web; o funcionamento no Expo Go deve ser conferido em um aparelho compatível.
+Os 13 testes cobrem médias, datas e notas inválidas, busca, prioridades e o serviço da API (lista vazia, detalhe, ids inválidos, HTTP 404/503, resposta malformada, falha de rede e cancelamento).
+
+## Testar no celular com Expo Go
+
+1. Instale uma versão do Expo Go compatível com o SDK 58 do projeto.
+2. Conecte o computador e o celular à mesma rede Wi-Fi.
+3. Na pasta do projeto execute `npm run start:phone` e leia o QR code pelo Expo Go (Android) ou pela câmera (iPhone).
+4. Se o iPhone solicitar autenticação, entre com a mesma conta Expo no computador (`npx expo login`) e no Expo Go.
+5. Se a rede bloquear a conexão, use `npx expo start --tunnel` como alternativa.
+
+A API é pública e usa HTTPS: a consulta dos contatos não precisa de servidor local nem de configurar o IP do computador. O servidor Expo ainda precisa estar acessível ao celular para carregar o aplicativo.
+
+Confira no aparelho: login, menu horizontal, cadastro, notas com vírgula, agenda com teclado aberto, plano de estudos e contatos. Puxe a lista para atualizar, toque em um contato para abrir o detalhe e teste sem conexão para ver o erro e o botão de nova tentativa. Os dados da API ainda não têm cache offline.
+
+O layout protege as áreas de câmera/barra de status e de gestos, quebra cartões em telas estreitas e permite rolagem dos formulários. Exportações web e Android verificam a compilação; não substituem o teste físico de teclado, gestos e Expo Go.
