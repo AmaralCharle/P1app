@@ -29,8 +29,8 @@ Abra pelo Expo Go compatível com o SDK do projeto ou use `npm run web` no naveg
 | Detalhe da disciplina | `/disciplina/[nome]` | Notas dos alunos e acesso à edição |
 | Agenda acadêmica | `/agenda` | Cadastro, filtros, conclusão e exclusão com confirmação |
 | Plano de estudos | `/plano-estudos` | Revisão por aluno, prioridades, tempo e progresso |
-| Contatos | `/contatos` | API com FlatList, busca, atualização e estados de tela |
-| Detalhe do contato | `/contato/[id]` | Consulta individual pelo id da API |
+| Clima para sua rotina | `/clima` | Clima real por cidade, previsão de 3 dias e atualização |
+| Previsão por horário | `/previsao/[data]` | Temperatura e chance de chuva por horário do dia selecionado |
 
 Os arquivos `_layout.tsx` são layouts de navegação e não entram na contagem. As rotas dinâmicas contam como uma tela cada, independentemente da quantidade de alunos ou matérias.
 
@@ -46,7 +46,7 @@ Os arquivos `_layout.tsx` são layouts de navegação e não entram na contagem.
 
 O mínimo de telas está completo. A integração da aula 9 está implementada; a aula 10 continua pendente:
 
-- **Aula 9 — API implementada:** diretório de contatos de demonstração com `GET https://jsonplaceholder.typicode.com/users`, `FlatList`, detalhe consultado em `/users/:id`, busca, atualização por botão e pull-to-refresh, carregamento, erro com nova tentativa e estado vazio. O serviço usa HTTPS, valida resposta e status HTTP, cancela chamadas ao sair da tela e limita a espera a 12 segundos. São pessoas fictícias, não alunos reais da instituição. Não é preciso cadastro, chave ou download: <https://jsonplaceholder.typicode.com/>. O serviço é somente de demonstração e alterações enviadas por POST não seriam persistidas no servidor.
+- **Aula 9 — API implementada:** consulta meteorológica real na WeatherAPI, autenticada por chave externa. A busca por cidade retorna temperatura, sensação térmica, umidade, vento e previsão de até 3 dias. A `FlatList` liga cada data ao detalhe por horário. Há atualização por botão e pull-to-refresh, carregamento, erro com nova tentativa e estado vazio. O serviço usa HTTPS, valida resposta e status HTTP, cancela chamadas ao sair da tela e limita a espera a 12 segundos. Trata cidade inexistente, chave inválida, limite de consultas e indisponibilidade. Fonte: <https://www.weatherapi.com/docs/>.
 - **Aula 10 — persistência:** `useState` e Context mantêm dados apenas em memória. Ainda não há AsyncStorage, SecureStore ou SQLite. Próxima etapa: persistir alunos/notas/agenda/progresso, hidratar antes de renderizar e tratar falhas de leitura e gravação. Cache da API deve informar quando está usando dados locais. Uma sessão demonstrativa persistente não equivale a autenticação real.
 
 ## Verificações
@@ -57,7 +57,18 @@ npm run typecheck
 npx expo export --platform web
 ```
 
-Os 13 testes cobrem médias, datas e notas inválidas, busca, prioridades e o serviço da API (lista vazia, detalhe, ids inválidos, HTTP 404/503, resposta malformada, falha de rede e cancelamento).
+Os 14 testes cobrem médias, datas e notas inválidas, busca, prioridades e clima (parâmetros, chave ausente/inválida, cidade inexistente, limite de consultas, estado vazio, resposta malformada, falha de rede, cancelamento e sugestões de organização).
+
+## Configurar a WeatherAPI
+
+1. Crie uma conta gratuita em <https://www.weatherapi.com/signup> e copie a chave no painel da conta. A função usa apenas clima atual e previsão de 3 dias, incluídos no plano Free.
+2. Copie `.env.example` para `.env.local` na raiz do projeto.
+3. Preencha `EXPO_PUBLIC_WEATHER_API_KEY` com sua chave, sem aspas, sem compartilhar o arquivo.
+4. Reinicie o servidor Expo para carregar a variável e recarregue o aplicativo.
+
+`.env.local` está ignorado pelo Git; somente o exemplo vazio é versionado. Como as variáveis `EXPO_PUBLIC_` são incluídas no aplicativo, isso não torna a chave um segredo de servidor. Esta integração é para demonstração acadêmica; em uma publicação pública, use um backend para proteger a chave ou as restrições de aplicação oferecidas pelo provedor.
+
+Não há dados meteorológicos simulados no app. Sem chave ou internet, a tela informa a indisponibilidade. As dicas de mochila são regras locais baseadas nos valores retornados pela previsão, não respostas de IA. A consulta usa a cidade digitada, sem permissão de GPS. Os horários e a data da previsão seguem a localidade consultada.
 
 ## Testar no celular com Expo Go
 
@@ -67,8 +78,8 @@ Os 13 testes cobrem médias, datas e notas inválidas, busca, prioridades e o se
 4. Se o iPhone solicitar autenticação, entre com a mesma conta Expo no computador (`npx expo login`) e no Expo Go.
 5. Se a rede bloquear a conexão e o Expo Go mostrar uma falha ao abrir o projeto, use `npm run start:tunnel` e escaneie o novo QR code. O projeto inclui `@expo/ngrok` como dependência de desenvolvimento para esse modo. O computador e o celular precisam de internet, mas podem estar em redes diferentes. O endereço do túnel muda ao reiniciar; use sempre o QR code do servidor atual.
 
-A API é pública e usa HTTPS: a consulta dos contatos não precisa de servidor local nem de configurar o IP do computador. O servidor Expo ainda precisa estar acessível ao celular para carregar o aplicativo.
+A API externa usa HTTPS: a consulta do clima não precisa de servidor local nem de configurar o IP do computador, mas exige a chave WeatherAPI na variável local. O servidor Expo ainda precisa estar acessível ao celular para carregar o aplicativo.
 
-Confira no aparelho: login, menu horizontal, cadastro, notas com vírgula, agenda com teclado aberto, plano de estudos e contatos. Puxe a lista para atualizar, toque em um contato para abrir o detalhe e teste sem conexão para ver o erro e o botão de nova tentativa. Os dados da API ainda não têm cache offline.
+Confira no aparelho: login, menu horizontal, cadastro, notas com vírgula, agenda com teclado aberto, plano de estudos e clima. Consulte sua cidade, puxe a lista para atualizar, toque em uma data para abrir os horários e teste uma cidade inexistente e uma falha de conexão. Os dados da API ainda não têm cache offline.
 
 O layout protege as áreas de câmera/barra de status e de gestos, quebra cartões em telas estreitas e permite rolagem dos formulários. Exportações web e Android verificam a compilação; não substituem o teste físico de teclado, gestos e Expo Go.
