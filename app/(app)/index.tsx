@@ -9,9 +9,14 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { getAverage, getStatus } from '../../dados.js';
 import { useStudents } from '../../StudentsContext';
+import { useRouter } from 'expo-router';
+import { Action, Card, ui } from '../../components/AcademicUI';
+import { useAcademic } from '../../AcademicContext';
 
 export default function Dashboard() {
   const { students } = useStudents();
+  const router = useRouter();
+  const { events } = useAcademic();
 
   const summary = useMemo(() => {
     const total = students.length;
@@ -58,6 +63,10 @@ export default function Dashboard() {
           </Text>
         </View>
 
+        <View style={[ui.grid, { marginBottom: 24 }]}>
+          <View style={ui.column}><Card><Text style={ui.heading}>Explore as disciplinas</Text><Text style={ui.text}>Compare as médias e acompanhe as notas de cada matéria.</Text><Action label="Abrir disciplinas" icon="book-open" secondary onPress={() => router.push('/disciplinas')} /></Card></View>
+          <View style={ui.column}><Card><Text style={ui.heading}>Sua rotina acadêmica</Text><Text style={ui.text}>{events.filter(event => !event.done).length} compromisso(s) pendente(s) na agenda.</Text><Action label="Organizar agenda" icon="calendar" secondary onPress={() => router.push('/agenda')} /><Action label="Ver plano de estudos" icon="target" secondary onPress={() => router.push('/plano-estudos')} /></Card></View>
+        </View>
         <View style={styles.summaryGrid}>
           <View style={[styles.metricCard, styles.totalCard]}>
             <View style={styles.metricHeader}>
