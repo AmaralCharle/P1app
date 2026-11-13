@@ -40,14 +40,14 @@ Os arquivos `_layout.tsx` são layouts de navegação e não entram na contagem.
 - A agenda valida datas, ordena por prazo e destaca compromissos vencidos ou para hoje.
 - O plano sugere 40 minutos para notas abaixo de 5, 30 para notas de 5 até abaixo de 7 e 20 para notas a partir de 7. São regras locais, sem inteligência artificial.
 - Revisões concluídas são separadas por aluno e disciplina.
-- O estado é compartilhado entre as rotas durante a sessão. Ao fechar/recarregar o app ou sair da conta, as alterações se perdem.
+- Alunos, notas, agenda e revisões são restaurados do armazenamento local ao abrir o app. O tema e a última cidade também ficam salvos.
 
 ## Situação das aulas 9 e 10
 
-O mínimo de telas está completo. A integração da aula 9 está implementada; a aula 10 continua pendente:
+O mínimo de telas e as integrações das aulas 9 e 10 estão implementados:
 
 - **Aula 9 — API implementada:** consulta meteorológica real na WeatherAPI, autenticada por chave externa. A busca por cidade retorna temperatura, sensação térmica, umidade, vento e previsão de até 3 dias. A `FlatList` liga cada data ao detalhe por horário. Há atualização por botão e pull-to-refresh, carregamento, erro com nova tentativa e estado vazio. O serviço usa HTTPS, valida resposta e status HTTP, cancela chamadas ao sair da tela e limita a espera a 12 segundos. Trata cidade inexistente, chave inválida, limite de consultas e indisponibilidade. Fonte: <https://www.weatherapi.com/docs/>.
-- **Aula 10 — persistência:** `useState` e Context mantêm dados apenas em memória. Ainda não há AsyncStorage, SecureStore ou SQLite. Próxima etapa: persistir alunos/notas/agenda/progresso, hidratar antes de renderizar e tratar falhas de leitura e gravação. Cache da API deve informar quando está usando dados locais. Uma sessão demonstrativa persistente não equivale a autenticação real.
+- **Aula 10 — persistência implementada:** wrapper tipado de AsyncStorage, `usePersistedState`, tema claro/escuro em Configurações, sessão restaurada antes da guarda de rota, splash durante a inicialização, alunos/notas/agenda/revisões persistidos e clima com cache local. Há validade de 5 minutos, apresentação imediata de cache antigo enquanto atualiza, aviso de dados salvos/offline e atualização ao reconectar. Uma sessão demonstrativa persistente não equivale a autenticação real.
 
 ## Verificações
 
@@ -57,7 +57,37 @@ npm run typecheck
 npx expo export --platform web
 ```
 
-Os 14 testes cobrem médias, datas e notas inválidas, busca, prioridades e clima (parâmetros, chave ausente/inválida, cidade inexistente, limite de consultas, estado vazio, resposta malformada, falha de rede, cancelamento e sugestões de organização).
+Os 35 testes cobrem médias, notas e datas, busca, prioridades, WeatherAPI, leitura corrompida, validação de dados locais, hidratação, reabertura, atualizações concorrentes, falha de gravação e recuperação, TTL, atualização forçada, cache offline, falha da API, cancelamento e limpeza de cache.
+
+## Armazenamento local — Aula 10
+
+As chaves são versionadas com o prefixo `academy:v1:`. O app lê o disco antes de decidir a rota ou exibir os dados acadêmicos; os valores iniciais não são gravados por cima dos valores existentes durante a hidratação. Alterações consecutivas são gravadas em ordem.
+
+| Informação | Onde fica | Comportamento |
+| --- | --- | --- |
+| Sessão demonstrativa Admin | AsyncStorage | Restaura ao abrir; removida ao sair |
+| Tema e última cidade | AsyncStorage | Preferências do aparelho; preservadas ao sair |
+| Alunos e notas | AsyncStorage | Dados acadêmicos locais; preservados ao sair |
+| Agenda e revisões concluídas | AsyncStorage | Restauradas com os dados acadêmicos |
+| Clima por cidade e data da consulta | AsyncStorage | Cache válido por 5 minutos; removido ao sair |
+| Chave WeatherAPI | `.env.local` | Não é gravada no AsyncStorage nem versionada no Git |
+
+Se a leitura falhar ou o formato salvo for incompatível, o app mostra nova tentativa sem substituir os dados pelo padrão. Se uma gravação falhar, mantém o trabalho na memória e informa que ainda não foi salvo; o botão de nova tentativa grava o valor atual.
+
+O login é único e demonstrativo; os dados acadêmicos pertencem ao espaço local do aparelho. Sair encerra a sessão e remove as consultas de clima, preservando o trabalho cadastrado. Não há sincronização entre celulares nem recuperação após desinstalar o app ou limpar seus dados.
+
+Escolhemos AsyncStorage porque o conjunto de dados e o cache são pequenos. O projeto não possui senha nem token JWT: portanto não há token a colocar em SecureStore. SQLite fica para um volume maior que exija consultas relacionais. Essas ferramentas não foram adicionadas como demonstrações sem uso real.
+
+### Roteiro de teste no Android
+
+1. Entre, cadastre um aluno, salve uma nota, adicione um compromisso e conclua uma revisão.
+2. Em Configurações, altere o tema. Consulte uma cidade no Clima.
+3. Com internet, feche e reabra o app: confirme a sessão, o tema, o aluno, a nota, o compromisso e a revisão.
+4. Com o app já aberto, ative o modo avião e volte ao Clima: a última consulta aparece com aviso de dados salvos. Uma cidade nunca consultada exige internet.
+5. Reconecte para atualizar a previsão. Use o botão Atualizar para forçar uma nova chamada antes dos 5 minutos.
+6. Saia da conta e reabra: deve aparecer o login. Ao entrar novamente, o trabalho acadêmico continua salvo.
+
+No Expo Go, a conexão com o servidor de desenvolvimento é necessária para carregar/recarregar o código. Faça o teste de modo avião com o app já carregado. A aparência da splash no Expo Go pode diferir de um aplicativo instalado, mas a leitura e a guarda de rota usam as mesmas flags de inicialização.
 
 ## Configurar a WeatherAPI
 
@@ -80,6 +110,6 @@ Não há dados meteorológicos simulados no app. Sem chave ou internet, a tela i
 
 A API externa usa HTTPS: a consulta do clima não precisa de servidor local nem de configurar o IP do computador, mas exige a chave WeatherAPI na variável local. O servidor Expo ainda precisa estar acessível ao celular para carregar o aplicativo.
 
-Confira no aparelho: login, menu horizontal, cadastro, notas com vírgula, agenda com teclado aberto, plano de estudos e clima. Consulte sua cidade, puxe a lista para atualizar, toque em uma data para abrir os horários e teste uma cidade inexistente e uma falha de conexão. Os dados da API ainda não têm cache offline.
+Confira no aparelho: login, menu horizontal, cadastro, notas com vírgula, agenda com teclado aberto, plano de estudos e clima. Consulte sua cidade, puxe a lista para atualizar e toque em uma data para abrir os horários. Teste reabertura, troca de tema e modo avião com o roteiro acima.
 
 O layout protege as áreas de câmera/barra de status e de gestos, quebra cartões em telas estreitas e permite rolagem dos formulários. Exportações web e Android verificam a compilação; não substituem o teste físico de teclado, gestos e Expo Go.
