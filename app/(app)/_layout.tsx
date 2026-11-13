@@ -14,6 +14,7 @@ import {
 } from 'expo-router';
 import { useAuth } from '../../AuthContext';
 import { StudentsProvider } from '../../StudentsContext';
+import { AcademicProvider } from '../../AcademicContext';
 
 const screenOrder = [
   { label: 'Dashboard', route: '/' },
@@ -21,6 +22,9 @@ const screenOrder = [
   { label: 'Adicionar', route: '/novo-aluno' },
   { label: 'Notas', route: '/notas' },
   { label: 'Relatórios', route: '/relatorios' },
+  { label: 'Disciplinas', route: '/disciplinas' },
+  { label: 'Agenda', route: '/agenda' },
+  { label: 'Estudos', route: '/plano-estudos' },
   { label: 'Config', route: '/config' },
 ] as const;
 
@@ -37,6 +41,7 @@ export default function AppLayout() {
 
   return (
     <StudentsProvider>
+      <AcademicProvider>
       <View style={styles.screen}>
         <View
           style={[
@@ -97,6 +102,7 @@ export default function AppLayout() {
           <Slot />
         </View>
       </View>
+      </AcademicProvider>
     </StudentsProvider>
   );
 }
