@@ -25,6 +25,7 @@ const screenOrder = [
   { label: 'Disciplinas', route: '/disciplinas' },
   { label: 'Agenda', route: '/agenda' },
   { label: 'Estudos', route: '/plano-estudos' },
+  { label: 'Contatos', route: '/contatos' },
   { label: 'Config', route: '/config' },
 ] as const;
 
@@ -74,7 +75,7 @@ export default function AppLayout() {
               const isActive =
                 route === '/'
                   ? pathname === '/'
-                    : pathname === route || pathname.startsWith(`${route}/`) || (route === '/disciplinas' && pathname.startsWith('/disciplina/'));
+                    : pathname === route || pathname.startsWith(`${route}/`) || (route === '/disciplinas' && pathname.startsWith('/disciplina/')) || (route === '/contatos' && pathname.startsWith('/contato/'));
 
               return (
                 <Pressable
