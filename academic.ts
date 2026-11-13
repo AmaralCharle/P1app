@@ -1,5 +1,9 @@
 import type { Student } from './StudentsContext';
 
+export function normalizeSearch(value: string) {
+  return value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('pt-BR').trim();
+}
+
 export function getSubjects(students: Student[]) {
   return [...new Set(students.flatMap(student => Object.keys(student.notas)))].sort((a, b) => a.localeCompare(b, 'pt-BR'));
 }

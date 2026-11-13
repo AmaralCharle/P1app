@@ -3,7 +3,7 @@ import { Feather } from '@expo/vector-icons';
 import { Text, TextInput, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useStudents } from '../../StudentsContext';
-import { getSubjects, getSubjectSummary } from '../../academic';
+import { getSubjects, getSubjectSummary, normalizeSearch } from '../../academic';
 import { AcademicScreen, Action, Card, ui } from '../../components/AcademicUI';
 import { colors } from '../../theme';
 
@@ -11,7 +11,7 @@ export default function Disciplinas() {
   const { students } = useStudents();
   const router = useRouter();
   const [search, setSearch] = useState('');
-  const subjects = getSubjects(students).filter(subject => subject.toLocaleLowerCase('pt-BR').includes(search.trim().toLocaleLowerCase('pt-BR')));
+  const subjects = getSubjects(students).filter(subject => normalizeSearch(subject).includes(normalizeSearch(search)));
   return <AcademicScreen title="Disciplinas" subtitle="Acompanhe cada matéria e encontre os alunos que precisam de apoio.">
     <TextInput accessibilityLabel="Buscar disciplina" style={ui.input} placeholder="Buscar disciplina..." placeholderTextColor={colors.placeholder} value={search} onChangeText={setSearch} />
     <Text style={ui.muted}>{subjects.length} disciplina(s) encontrada(s)</Text>
