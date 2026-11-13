@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { useStudents } from '../../StudentsContext';
-import { AcademicScreen, Card, ui } from '../../components/AcademicUI';
+import { AcademicScreen, Action, Card, ui } from '../../components/AcademicUI';
 import { getStudyPlan } from '../../academic';
+import { useAcademic } from '../../AcademicContext';
 
 export default function PlanoEstudos() {
   const { students } = useStudents();
+  const { completedSessions, toggleSession } = useAcademic();
   const [studentId, setStudentId] = useState<number | null>(students[0]?.id ?? null);
   const student = students.find(item => item.id === studentId);
   const subjects = student ? getStudyPlan(student.notas) : [];
@@ -21,6 +23,8 @@ export default function PlanoEstudos() {
         <View style={ui.spread}><Text style={ui.heading}>{subject}</Text><Text style={ui.badge}>Nota {grade.toFixed(1)}</Text></View>
         <Text style={ui.badge}>{priority} · {minutes} min</Text>
         <Text style={ui.text}>{guidance}</Text>
+        <Action label={completedSessions.includes(JSON.stringify([student.id, subject])) ? 'Reabrir revisão' : 'Concluir revisão'} icon={completedSessions.includes(JSON.stringify([student.id, subject])) ? 'rotate-ccw' : 'check-circle'} secondary onPress={() => toggleSession(JSON.stringify([student.id, subject]))} />
+        {completedSessions.includes(JSON.stringify([student.id, subject])) && <Text style={[ui.text, ui.success]}>Revisão concluída</Text>}
       </Card></View>)}</View>
     </>}
   </AcademicScreen>;
