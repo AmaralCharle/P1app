@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useRouter } from 'expo-router';
 import { Pressable, Text, TextInput, View } from 'react-native';
 import { useAcademic } from '../../AcademicContext';
 import { formatAcademicDate, parseAcademicDate } from '../../academic';
@@ -6,6 +7,7 @@ import { AcademicScreen, Action, Card, ui } from '../../components/AcademicUI';
 import { colors } from '../../theme';
 
 export default function Agenda() {
+  const router = useRouter();
   const { events, addEvent, toggleEvent, removeEvent } = useAcademic();
   const [title, setTitle] = useState('');
   const [subject, setSubject] = useState('');
@@ -34,6 +36,7 @@ export default function Agenda() {
   }
 
   return <AcademicScreen title="Agenda acadêmica" subtitle="Organize provas, entregas e revisões em um só lugar.">
+    <Action label="Conferir o clima antes de ir à aula" icon="cloud" secondary onPress={() => router.push('/clima')} />
     <Card><View style={ui.spread}><Text style={ui.text}>{events.filter(event => !event.done).length} compromisso(s) pendente(s)</Text><Text style={overdue ? ui.error : ui.muted}>{overdue ? `${overdue} com prazo vencido` : 'Nenhum prazo vencido'}</Text></View></Card>
     <View style={ui.grid}>
       <View style={ui.column}><Card>

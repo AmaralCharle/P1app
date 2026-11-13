@@ -20,7 +20,7 @@ export function WeatherHero({ weather }: { weather: WeatherForecast }) {
       <View style={weatherStyles.metric}><Feather name="wind" size={18} color={colors.info} /><Text style={ui.muted}>Vento</Text><Text style={weatherStyles.value}>{weather.current.wind_kph.toFixed(0)} km/h</Text></View>
       <View style={weatherStyles.metric}><Feather name="cloud-rain" size={18} color={colors.info} /><Text style={ui.muted}>Chuva hoje</Text><Text style={weatherStyles.value}>{today ? `${today.day.daily_chance_of_rain}%` : '—'}</Text></View>
     </View>
-    <Text style={ui.muted}>Atualizado em {weather.current.last_updated.split(' ').reverse().join(' · ')} · horário da cidade</Text>
+    <Text style={ui.muted}>Atualizado em {weather.current.last_updated.slice(0, 10).split('-').reverse().join('/')} às {weather.current.last_updated.slice(11)} · horário da cidade</Text>
   </View>;
 }
 

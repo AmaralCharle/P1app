@@ -66,6 +66,7 @@ export default function Dashboard() {
         <View style={[ui.grid, { marginBottom: 24 }]}>
           <View style={ui.column}><Card><Text style={ui.heading}>Explore as disciplinas</Text><Text style={ui.text}>Compare as médias e acompanhe as notas de cada matéria.</Text><Action label="Abrir disciplinas" icon="book-open" secondary onPress={() => router.push('/disciplinas')} /></Card></View>
           <View style={ui.column}><Card><Text style={ui.heading}>Sua rotina acadêmica</Text><Text style={ui.text}>{events.filter(event => !event.done).length} compromisso(s) pendente(s) na agenda.</Text><Action label="Organizar agenda" icon="calendar" secondary onPress={() => router.push('/agenda')} /><Action label="Ver plano de estudos" icon="target" secondary onPress={() => router.push('/plano-estudos')} /></Card></View>
+          <View style={ui.column}><Card><View style={ui.spread}><Text style={ui.heading}>Antes de sair para a aula</Text><Feather name="sun" color="#8ab4ff" size={24} /></View><Text style={ui.text}>Confira o clima real, a chance de chuva e a previsão por horário na cidade onde você estuda.</Text><Action label="Consultar clima" icon="cloud" secondary onPress={() => router.push('/clima')} /></Card></View>
         </View>
         <View style={styles.summaryGrid}>
           <View style={[styles.metricCard, styles.totalCard]}>
