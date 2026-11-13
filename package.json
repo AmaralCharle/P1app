@@ -21,7 +21,7 @@
     "typecheck": "tsc --noEmit",
     "start": "expo start",
     "start:phone": "expo start --lan",
-    "start:tunnel": "expo start --tunnel --go",
+    "start:tunnel": "expo start --tunnel ngrok --go",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web"
