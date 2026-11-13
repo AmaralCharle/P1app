@@ -33,7 +33,7 @@ export default function AppLayout() {
   const router = useRouter();
   const pathname = usePathname();
   const { width } = useWindowDimensions();
-  const isMobile = width < 768;
+  const isMobile = width < 1040;
 
   if (!usuario) {
     return <Redirect href="/login" />;
@@ -61,6 +61,7 @@ export default function AppLayout() {
           </View>
 
           <ScrollView
+            style={{ flexGrow: 0, flexShrink: 1, maxWidth: '100%' }}
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{
@@ -73,11 +74,14 @@ export default function AppLayout() {
               const isActive =
                 route === '/'
                   ? pathname === '/'
-                  : pathname === route || pathname.startsWith(`${route}/`);
+                    : pathname === route || pathname.startsWith(`${route}/`) || (route === '/disciplinas' && pathname.startsWith('/disciplina/'));
 
               return (
                 <Pressable
                   key={label}
+                  accessibilityRole="button"
+                  accessibilityLabel={`Ir para ${label}`}
+                  accessibilityState={{ selected: isActive }}
                   style={[
                     styles.tabButton,
                     isActive ? styles.tabButtonActive : styles.tabButtonInactive,
@@ -143,6 +147,8 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   tabButton: {
+    minHeight: 44,
+    justifyContent: 'center',
     borderRadius: 10,
     paddingHorizontal: 12,
     paddingVertical: 10,
