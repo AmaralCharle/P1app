@@ -22,3 +22,11 @@ export function parseAcademicDate(value: string): string | null {
 export function formatAcademicDate(value: string) {
   return value.split('-').reverse().join('/');
 }
+
+export function getStudyPlan(grades: Record<string, number>) {
+  return Object.entries(grades).sort((a, b) => a[1] - b[1]).map(([subject, grade]) => ({
+    subject, grade, minutes: grade < 5 ? 40 : grade < 7 ? 30 : 20,
+    priority: grade < 5 ? 'Prioridade alta' : grade < 7 ? 'Reforço' : 'Manutenção',
+    guidance: grade < 5 ? 'Retome os conceitos básicos e resolva exercícios com correção.' : grade < 7 ? 'Revise os pontos de dúvida e refaça as questões que errou.' : 'Faça uma revisão breve e pratique para manter o desempenho.',
+  }));
+}
