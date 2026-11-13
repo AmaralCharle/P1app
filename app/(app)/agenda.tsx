@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Text, TextInput, View } from 'react-native';
+import { Pressable, Text, TextInput, View } from 'react-native';
 import { useAcademic } from '../../AcademicContext';
 import { formatAcademicDate, parseAcademicDate } from '../../academic';
 import { AcademicScreen, Action, Card, ui } from '../../components/AcademicUI';
@@ -12,6 +12,8 @@ export default function Agenda() {
   const [date, setDate] = useState('');
   const [error, setError] = useState('');
   const [feedback, setFeedback] = useState('');
+  const [filter, setFilter] = useState<'Todos' | 'Pendentes' | 'Concluídos'>('Todos');
+  const visibleEvents = events.filter(event => filter === 'Todos' || (filter === 'Concluídos' ? event.done : !event.done));
 
   function save() {
     const parsed = parseAcademicDate(date);
@@ -39,8 +41,10 @@ export default function Agenda() {
       </Card></View>
       <View style={ui.column}>
         <Text style={ui.heading}>Meus compromissos</Text>
+        <View style={ui.row}>{(['Todos', 'Pendentes', 'Concluídos'] as const).map(item => <Pressable key={item} accessibilityRole="button" accessibilityState={{ selected: filter === item }} style={[ui.chip, filter === item && ui.chipActive]} onPress={() => setFilter(item)}><Text style={ui.text}>{item}</Text></Pressable>)}</View>
         {!events.length && <Card><Text style={ui.heading}>Sua agenda está livre</Text><Text style={ui.text}>Adicione a próxima prova ou entrega para começar.</Text></Card>}
-        {events.map(event => <Card key={event.id}>
+        {!!events.length && !visibleEvents.length && <Card><Text style={ui.text}>Nenhum compromisso neste filtro.</Text></Card>}
+        {visibleEvents.map(event => <Card key={event.id}>
           <View style={ui.spread}><Text style={ui.badge}>{formatAcademicDate(event.date)}</Text><Text style={event.done ? [ui.text, ui.success] : ui.muted}>{event.done ? 'Concluído' : 'Pendente'}</Text></View>
           <Text style={ui.heading}>{event.title}</Text><Text style={ui.text}>{event.subject}</Text>
           <Action label={event.done ? 'Reabrir compromisso' : 'Marcar como concluído'} icon={event.done ? 'rotate-ccw' : 'check'} secondary onPress={() => toggleEvent(event.id)} />
